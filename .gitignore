@@ -1,0 +1,76 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+ENV/
+env.bak/
+venv.bak/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Temporary files
+*.tmp
+*.temp
+temp/
+
+# Excel temporary files
+~$*.xlsx
+~$*.xlsm
+~$*.xls
+
+# Large data files (keep structure but not the actual data)
+data/raw/*.xlsm
+data/raw/*.xlsx
+data/processed/*.xlsx
+data/processed/*.csv
+data/processed/por_arquivo/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# FastAPI
+.pytest_cache/
+
+# Node modules (if any)
+node_modules/
+
+# Build outputs
+build/
+dist/
+
+# Coverage reports
+htmlcov/
+.coverage
+.coverage.*
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json

@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Simplificado - Óticas Carne Fácil</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .metric-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .metric-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            color: white;
+            margin: 0 auto 20px auto;
+        }
+        
+        .metric-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #333;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        
+        .metric-label {
+            color: #666;
+            font-size: 1.1em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        .page-title {
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 40px;
+            text-align: center;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-size: 0.9em;
+            font-weight: bold;
+            margin-left: 15px;
+            background: #28a745;
+            color: white;
+        }
+        
+        .footer-info {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+            text-align: center;
+        }
+        
+        .row-metrics {
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid py-5">
+        <!-- Header -->
+        <div class="row">
+            <div class="col-12">
+                <h1 class="page-title">
+                    <i class="fas fa-eye"></i> Dashboard Óticas Carne Fácil
+                    <span class="status-badge">✅ Sistema Operacional</span>
+                </h1>
+            </div>
+        </div>
+        
+        <!-- Métricas Principais -->
+        <div class="row row-metrics">
+            <div class="col-lg-3 col-md-6">
+                <div class="metric-card">
+                    <div class="metric-icon" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="metric-value">{{ "{:,}".format(metricas.get('total_clientes', 0)) }}</div>
+                    <div class="metric-label">Clientes Únicos</div>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6">
+                <div class="metric-card">
+                    <div class="metric-icon" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+                        <i class="fas fa-file-medical"></i>
+                    </div>
+                    <div class="metric-value">{{ "{:,}".format(metricas.get('total_os', 0)) }}</div>
+                    <div class="metric-label">Total de OS</div>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6">
+                <div class="metric-card">
+                    <div class="metric-icon" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+                        <i class="fas fa-link"></i>
+                    </div>
+                    <div class="metric-value">{{ metricas.get('taxa_identificacao', 0) }}%</div>
+                    <div class="metric-label">Taxa Identificação</div>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6">
+                <div class="metric-card">
+                    <div class="metric-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <div class="metric-value">R$ {{ "{:,.0f}".format(metricas.get('total_vendas', 0)) }}</div>
+                    <div class="metric-label">Total em Vendas</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Métricas Secundárias -->
+        <div class="row row-metrics">
+            <div class="col-lg-3 col-md-6">
+                <div class="metric-card">
+                    <div class="metric-icon" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <div class="metric-value">{{ "{:,}".format(metricas.get('os_com_vendas', 0)) }}</div>
+                    <div class="metric-label">OS com Vendas</div>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6">
+                <div class="metric-card">
+                    <div class="metric-icon" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                    <div class="metric-value">{{ "{:,}".format(metricas.get('os_com_dioptrias', 0)) }}</div>
+                    <div class="metric-label">OS com Dioptrías</div>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6">
+                <div class="metric-card">
+                    <div class="metric-icon" style="background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);">
+                        <i class="fas fa-calculator"></i>
+                    </div>
+                    <div class="metric-value">R$ {{ "{:,.0f}".format(metricas.get('ticket_medio', 0)) }}</div>
+                    <div class="metric-label">Ticket Médio</div>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6">
+                <div class="metric-card">
+                    <div class="metric-icon" style="background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="metric-value">{{ "{:,}".format(metricas.get('os_identificadas', 0)) }}</div>
+                    <div class="metric-label">OS Identificadas</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="row">
+            <div class="col-12">
+                <div class="footer-info">
+                    <h4><i class="fas fa-database"></i> Sistema Integrado Óticas Carne Fácil</h4>
+                    <p class="mb-3">
+                        Dashboard executivo com dados consolidados e sistema de relacionamento Cliente-OS
+                    </p>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <strong><i class="fas fa-building"></i> 3 Lojas</strong><br>
+                            <small>MAUA, SAO_MATEUS, RIO_PEQUENO</small>
+                        </div>
+                        <div class="col-md-4">
+                            <strong><i class="fas fa-cogs"></i> 2 Sistemas</strong><br>
+                            <small>LANCASTER, OTM</small>
+                        </div>
+                        <div class="col-md-4">
+                            <strong><i class="fas fa-clock"></i> Última Atualização</strong><br>
+                            <small>{{ timestamp }}</small>
+                        </div>
+                    </div>
+                    
+                    <hr>
+                    
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <h5>🎯 Conquistas do Sistema:</h5>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <span class="badge bg-success p-2">✅ Clientes Consolidados</span>
+                                </div>
+                                <div class="col-md-3">
+                                    <span class="badge bg-info p-2">✅ Relacionamento OS-Cliente</span>
+                                </div>
+                                <div class="col-md-3">
+                                    <span class="badge bg-warning p-2">✅ Dioptrías Completas</span>
+                                </div>
+                                <div class="col-md-3">
+                                    <span class="badge bg-primary p-2">✅ Vendas Integradas</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Auto-refresh a cada 2 minutos
+        setInterval(function() {
+            location.reload();
+        }, 120000);
+        
+        // Animação de entrada
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.metric-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                setTimeout(() => {
+                    card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 150);
+            });
+        });
+    </script>
+</body>
+</html>

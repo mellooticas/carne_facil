@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Óticas Carne Fácil</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .dashboard-header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            margin-bottom: 30px;
+            padding: 25px;
+        }
+        
+        .metric-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+        }
+        
+        .metric-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+            margin-bottom: 15px;
+        }
+        
+        .chart-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .metric-value {
+            font-size: 2.2em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .metric-label {
+            color: #666;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .page-title {
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 30px;
+        }
+        
+        .last-update {
+            color: #666;
+            font-size: 0.85em;
+            text-align: right;
+            margin-top: 10px;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        
+        .status-success { background: #d4edda; color: #155724; }
+        .status-warning { background: #fff3cd; color: #856404; }
+        .status-info { background: #d1ecf1; color: #0c5460; }
+    </style>
+</head>
+<body>
+    <div class="container-fluid py-4">
+        <!-- Header -->
+        <div class="row">
+            <div class="col-12">
+                <h1 class="page-title text-center">
+                    <i class="fas fa-eye"></i> Dashboard Óticas Carne Fácil
+                    <span class="status-badge status-success">Sistema Integrado</span>
+                </h1>
+            </div>
+        </div>
+        
+        <!-- Métricas Principais -->
+        <div class="row">
+            <div class="col-lg-3 col-md-6">
+                <div class="metric-card">
+                    <div class="metric-icon" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="metric-value">{{ "{:,}".format(metricas.get('total_clientes', 0)) }}</div>
+                    <div class="metric-label">Clientes Únicos</div>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6">
+                <div class="metric-card">
+                    <div class="metric-icon" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+                        <i class="fas fa-file-medical"></i>
+                    </div>
+                    <div class="metric-value">{{ "{:,}".format(metricas.get('total_os', 0)) }}</div>
+                    <div class="metric-label">Total de OS</div>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6">
+                <div class="metric-card">
+                    <div class="metric-icon" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+                        <i class="fas fa-link"></i>
+                    </div>
+                    <div class="metric-value">{{ metricas.get('taxa_identificacao', 0) }}%</div>
+                    <div class="metric-label">Taxa Identificação</div>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6">
+                <div class="metric-card">
+                    <div class="metric-icon" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <div class="metric-value">R$ {{ "{:,.0f}".format(metricas.get('total_vendas', 0)) }}</div>
+                    <div class="metric-label">Total em Vendas</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Métricas Secundárias -->
+        <div class="row">
+            <div class="col-lg-4 col-md-6">
+                <div class="metric-card">
+                    <div class="metric-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <div class="metric-value">{{ "{:,}".format(metricas.get('os_com_vendas', 0)) }}</div>
+                    <div class="metric-label">OS com Vendas</div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 col-md-6">
+                <div class="metric-card">
+                    <div class="metric-icon" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                    <div class="metric-value">{{ "{:,}".format(metricas.get('os_com_dioptrias', 0)) }}</div>
+                    <div class="metric-label">OS com Dioptrías</div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 col-md-6">
+                <div class="metric-card">
+                    <div class="metric-icon" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                        <i class="fas fa-calculator"></i>
+                    </div>
+                    <div class="metric-value">R$ {{ "{:,.0f}".format(metricas.get('ticket_medio', 0)) }}</div>
+                    <div class="metric-label">Ticket Médio</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Gráficos -->
+        <div class="row">
+            <!-- Vendas por Loja -->
+            <div class="col-lg-6">
+                <div class="chart-container">
+                    <h5><i class="fas fa-chart-bar"></i> Vendas por Loja</h5>
+                    <div id="grafico-vendas-loja"></div>
+                </div>
+            </div>
+            
+            <!-- Distribuição de Clientes -->
+            <div class="col-lg-6">
+                <div class="chart-container">
+                    <h5><i class="fas fa-chart-pie"></i> Distribuição de Clientes</h5>
+                    <div id="grafico-clientes"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <!-- Evolução de OS -->
+            <div class="col-lg-6">
+                <div class="chart-container">
+                    <h5><i class="fas fa-chart-line"></i> Evolução de OS por Mês</h5>
+                    <div id="grafico-os-mes"></div>
+                </div>
+            </div>
+            
+            <!-- Top Produtos -->
+            <div class="col-lg-6">
+                <div class="chart-container">
+                    <h5><i class="fas fa-trophy"></i> Top Produtos</h5>
+                    <div id="grafico-produtos"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="row">
+            <div class="col-12">
+                <div class="dashboard-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="mb-0">
+                                <i class="fas fa-database"></i> Sistema Integrado Óticas Carne Fácil
+                            </h5>
+                            <small class="text-muted">
+                                Dashboard executivo com dados consolidados de todas as lojas
+                            </small>
+                        </div>
+                        <div class="text-end">
+                            <div class="last-update">
+                                Última atualização: {{ timestamp }}
+                            </div>
+                            <small class="text-muted">
+                                <i class="fas fa-sync-alt"></i> Dados em tempo real
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Renderizar gráficos
+        {% if grafico_vendas_loja %}
+        Plotly.newPlot('grafico-vendas-loja', {{ grafico_vendas_loja|safe }}.data, {{ grafico_vendas_loja|safe }}.layout, {responsive: true});
+        {% endif %}
+        
+        {% if grafico_clientes %}
+        Plotly.newPlot('grafico-clientes', {{ grafico_clientes|safe }}.data, {{ grafico_clientes|safe }}.layout, {responsive: true});
+        {% endif %}
+        
+        {% if grafico_os_mes %}
+        Plotly.newPlot('grafico-os-mes', {{ grafico_os_mes|safe }}.data, {{ grafico_os_mes|safe }}.layout, {responsive: true});
+        {% endif %}
+        
+        {% if grafico_produtos %}
+        Plotly.newPlot('grafico-produtos', {{ grafico_produtos|safe }}.data, {{ grafico_produtos|safe }}.layout, {responsive: true});
+        {% endif %}
+        
+        // Auto-refresh a cada 5 minutos
+        setInterval(function() {
+            location.reload();
+        }, 300000);
+        
+        // Animação de entrada das métricas
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.metric-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalhes - {{ loja_nome }}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+        
+        .nav {
+            margin-bottom: 2rem;
+        }
+        
+        .nav a {
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            background: rgba(255,255,255,0.9);
+            color: #2c3e50;
+            text-decoration: none;
+            border-radius: 25px;
+            margin-right: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .nav a:hover {
+            background: white;
+            transform: translateY(-2px);
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .metric-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+        
+        .metric-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+        
+        .metric-label {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+        }
+        
+        .section {
+            background: white;
+            margin: 2rem 0;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+        
+        .section-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.5rem;
+            font-size: 1.3rem;
+            font-weight: bold;
+        }
+        
+        .section-content {
+            padding: 1.5rem;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        
+        th {
+            background: #f8f9fa;
+            font-weight: 600;
+        }
+        
+        tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .status-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        
+        .status-sucesso {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-erro {
+            background: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🏪 {{ loja_nome }}</h1>
+        <p>Detalhes da Consolidação por Loja</p>
+    </div>
+
+    <div class="container">
+        <div class="nav">
+            <a href="/">← Voltar ao Dashboard</a>
+        </div>
+
+        <!-- Métricas da Loja -->
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-value">{{ totais.arquivos }}</div>
+                <div class="metric-label">Arquivos</div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-value">{{ "{:,}".format(totais.originais) }}</div>
+                <div class="metric-label">Registros Originais</div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-value">{{ "{:,}".format(totais.consolidados) }}</div>
+                <div class="metric-label">Registros Consolidados</div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-value">{{ "{:,}".format(totais.duplicatas) }}</div>
+                <div class="metric-label">Duplicatas Removidas</div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-value">{{ "{:,}".format(totais.os) }}</div>
+                <div class="metric-label">OS Identificadas</div>
+            </div>
+        </div>
+
+        <!-- Arquivos da Loja -->
+        <div class="section">
+            <div class="section-header">
+                📁 Arquivos da Loja {{ loja_nome }}
+            </div>
+            <div class="section-content">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Arquivo</th>
+                            <th>Status</th>
+                            <th>Registros Originais</th>
+                            <th>Registros Consolidados</th>
+                            <th>Duplicatas</th>
+                            <th>OS Total</th>
+                            <th>Redução</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for arquivo in arquivos %}
+                        <tr>
+                            <td style="max-width: 300px; word-wrap: break-word;">{{ arquivo.arquivo }}</td>
+                            <td>
+                                <span class="status-badge status-{{ arquivo.status }}">
+                                    {{ arquivo.status }}
+                                </span>
+                            </td>
+                            <td>{{ "{:,}".format(arquivo.registros_originais) }}</td>
+                            <td>{{ "{:,}".format(arquivo.registros_consolidados) }}</td>
+                            <td>{{ "{:,}".format(arquivo.duplicatas_encontradas) }}</td>
+                            <td>{{ "{:,}".format(arquivo.total_os) }}</td>
+                            <td>
+                                {% set reducao = ((arquivo.registros_originais - arquivo.registros_consolidados) / arquivo.registros_originais * 100) if arquivo.registros_originais > 0 else 0 %}
+                                {{ "%.1f"|format(reducao) }}%
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -6,10 +6,11 @@ Sistema web para gestão unificada de óticas com processamento de planilhas Exc
 ## Funcionalidades Implementadas
 - ✅ Sistema web FastAPI operacional (localhost:8000)
 - ✅ Interface de upload de arquivos Excel
-- ✅ Processamento de 6,892 registros de OS
-- ✅ Identificação de 3 lojas operacionais ativas
-- ✅ Sistema de deduplicação inteligente
-- ✅ Análise e consolidação de dados
+- ✅ Processamento corrigido de 25,706 OS únicas
+- ✅ Identificação e correção de 6 lojas (5 ativas + 1 fechada)
+- ✅ Sistema de deduplicação inteligente com 1,068 correções
+- ✅ Análise e consolidação de dados com agrupamento por OS única
+- ✅ Correção de múltiplas formas de pagamento por OS
 
 ## Estrutura do Projeto
 ```
@@ -26,12 +27,15 @@ d:\projetos\carne_facil\
 └── notebooks/            # Análises Jupyter
 ```
 
-## Dados Analisados
-- **SUZANO**: 5,252 registros (OS 8353-11408)
-- **MAUA**: 1,088 registros (OS 3911-4621)  
-- **RIO_PEQUENO**: 552 registros (OS 3449-4000)
-- **Total**: 6,892 registros com 4,229 OS únicas
-- **Duplicações**: 2,663 OS duplicadas identificadas
+## Dados Analisados (CORRIGIDOS)
+- **SUZANO**: 8,146 OS únicas (2023-2025)
+- **RIO_PEQUENO**: 4,480 OS únicas (2023-2024)
+- **PERUS**: 3,942 OS únicas (2023-2024)
+- **MAUA**: 3,575 OS únicas (2023-2025)
+- **SAO_MATEUS**: 2,811 OS únicas (2023-2024) - Loja fechada
+- **SUZANO2**: 2,752 OS únicas (2023-2024)
+- **Total**: 25,706 OS únicas com valor de R$ 3.971.617,86
+- **Correções**: 1,068 OS duplicadas eliminadas (principalmente São Mateus)
 
 ## Tecnologias Utilizadas
 - **Backend**: FastAPI + Uvicorn
@@ -47,14 +51,14 @@ d:\projetos\carne_facil\
 4. Acessar: http://localhost:8000
 
 ## Próximos Passos
-1. **Fase 1**: Implementar ID único por OS (loja + sistema + numero)
-2. **Fase 2**: Localizar e integrar dados de clientes
-3. **Fase 3**: Expandir interface web com dashboard completo
+1. **Fase 1**: ✅ Implementado ID único por OS (loja + sistema + numero)
+2. **Fase 2**: ✅ Localizado e integrado dados de clientes através das planilhas
+3. **Fase 3**: Expandir interface web com dashboard completo dos dados corrigidos
 
 ## Limitações Atuais
-- Dados de clientes não localizados
-- Apenas 3 de 6 lojas têm dados disponíveis
-- Duplicações entre sistemas LANCASTER/OTM
+- ✅ Dados de todas as 6 lojas localizados e processados
+- ✅ Sistema corrigido elimina duplicações entre LANCASTER/OTM
+- ✅ Múltiplas formas de pagamento consolidadas por OS única
 
 ## Contato
 Sistema desenvolvido para análise e gestão de óticas com foco em normalização de dados e eliminação de duplicações.

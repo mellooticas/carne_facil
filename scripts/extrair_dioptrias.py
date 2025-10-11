@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Extrator Completo de Dados de Dioptrías
-Processa TODOS os campos de dioptrías das 14.337 OS
+Extrator Completo de Dados de Dioptras
+Processa TODOS os campos de dioptras das 14.337 OS
 """
 
 import pandas as pd
@@ -29,9 +29,9 @@ class ExtratorDioptrias:
             'arquivos_processados': 0
         }
         
-        # Mapeamento dos campos de dioptrías baseado na análise
+        # Mapeamento dos campos de dioptras baseado na anlise
         self.campos_dioptrias = {
-            # Medidas da armação
+            # Medidas da armao
             'PONTE': 'ponte',
             'HORIZONTAL': 'horizontal', 
             'DIAG MAIOR': 'diag_maior',
@@ -65,8 +65,8 @@ class ExtratorDioptrias:
             'DNP15': 'dnp_4',
             'ALTURA16': 'altura_4',
             
-            # Adição
-            'ADIÇÃO': 'adicao'
+            # Adio
+            'ADIO': 'adicao'
         }
     
     def identificar_loja_por_arquivo(self, nome_arquivo):
@@ -91,7 +91,7 @@ class ExtratorDioptrias:
             return 'INDEFINIDA'
     
     def mapear_campos_arquivo(self, colunas):
-        """Mapeia colunas do arquivo para campos de dioptrías"""
+        """Mapeia colunas do arquivo para campos de dioptras"""
         mapeamento = {}
         
         for campo_esperado, campo_normalizado in self.campos_dioptrias.items():
@@ -119,13 +119,13 @@ class ExtratorDioptrias:
             valor_str = str(valor).strip()
             
             # Remover texto comum
-            valor_str = valor_str.replace('D', '').replace('°', '').strip()
+            valor_str = valor_str.replace('D', '').replace('', '').strip()
             
             # Tentar converter para float
             if valor_str in ['', '-', 'nan', 'NaN']:
                 return None
             
-            # Substituir vírgula por ponto
+            # Substituir vrgula por ponto
             valor_str = valor_str.replace(',', '.')
             
             return float(valor_str)
@@ -133,8 +133,8 @@ class ExtratorDioptrias:
             return None
     
     def processar_arquivo_dioptrias(self, arquivo_path):
-        """Processa arquivo específico extraindo dioptrías"""
-        logger.info(f"Processando dioptrías: {arquivo_path.name}")
+        """Processa arquivo especfico extraindo dioptras"""
+        logger.info(f"Processando dioptras: {arquivo_path.name}")
         
         try:
             # Carregar arquivo
@@ -162,14 +162,14 @@ class ExtratorDioptrias:
                 logger.warning(f"Erro ao ler {arquivo_path.name}: {e}")
                 return 0
             
-            # Mapear campos de dioptrías
+            # Mapear campos de dioptras
             mapeamento = self.mapear_campos_arquivo(df.columns)
             
             if not mapeamento:
                 logger.warning(f"Nenhum campo de dioptria encontrado em {arquivo_path.name}")
                 return 0
             
-            # Identificar campos básicos para identificação
+            # Identificar campos bsicos para identificao
             campos_basicos = self.identificar_campos_basicos(df.columns)
             
             # Identificar loja
@@ -189,21 +189,21 @@ class ExtratorDioptrias:
             self.estatisticas['arquivos_processados'] += 1
             self.estatisticas['total_os'] += os_processadas
             
-            logger.info(f"✅ {arquivo_path.name}: {os_processadas} OS com dioptrías | Loja: {loja}")
+            logger.info(f" {arquivo_path.name}: {os_processadas} OS com dioptras | Loja: {loja}")
             return os_processadas
             
         except Exception as e:
-            logger.error(f"❌ Erro em {arquivo_path.name}: {e}")
+            logger.error(f" Erro em {arquivo_path.name}: {e}")
             return 0
     
     def identificar_campos_basicos(self, colunas):
-        """Identifica campos básicos para identificação"""
+        """Identifica campos bsicos para identificao"""
         campos = {}
         
         for col in colunas:
             col_str = str(col).lower().strip()
             
-            if any(termo in col_str for termo in ['os n°', 'os:', 'os', 'ordem']):
+            if any(termo in col_str for termo in ['os n', 'os:', 'os', 'ordem']):
                 campos['numero_os'] = col
             elif any(termo in col_str for termo in ['nome:', 'nome', 'cliente']):
                 campos['nome'] = col
@@ -215,19 +215,19 @@ class ExtratorDioptrias:
         return campos
     
     def extrair_dioptrias_linha(self, row, mapeamento, campos_basicos, loja, arquivo, linha):
-        """Extrai dioptrías de uma linha específica"""
-        # Dados básicos de identificação
+        """Extrai dioptras de uma linha especfica"""
+        # Dados bsicos de identificao
         numero_os = str(row.get(campos_basicos.get('numero_os', ''))).strip() if campos_basicos.get('numero_os') else None
         nome = str(row.get(campos_basicos.get('nome', ''))).strip() if campos_basicos.get('nome') else None
         cpf = str(row.get(campos_basicos.get('cpf', ''))).strip() if campos_basicos.get('cpf') else None
         
-        # Se não tem dados básicos, pular
+        # Se no tem dados bsicos, pular
         if not numero_os or numero_os == 'nan':
             return None
         
-        # Extrair todos os campos de dioptría
+        # Extrair todos os campos de dioptra
         os_dioptria = {
-            # Identificação
+            # Identificao
             'numero_os': numero_os,
             'nome_informado': nome if nome != 'nan' else None,
             'cpf_informado': cpf if cpf != 'nan' else None,
@@ -235,7 +235,7 @@ class ExtratorDioptrias:
             'arquivo_origem': arquivo,
             'linha_arquivo': linha,
             
-            # Medidas da armação
+            # Medidas da armao
             'ponte': self.extrair_valor_dioptria(row.get(mapeamento.get('ponte'))) if 'ponte' in mapeamento else None,
             'horizontal': self.extrair_valor_dioptria(row.get(mapeamento.get('horizontal'))) if 'horizontal' in mapeamento else None,
             'diag_maior': self.extrair_valor_dioptria(row.get(mapeamento.get('diag_maior'))) if 'diag_maior' in mapeamento else None,
@@ -269,14 +269,14 @@ class ExtratorDioptrias:
             'dnp_4': self.extrair_valor_dioptria(row.get(mapeamento.get('dnp_4'))) if 'dnp_4' in mapeamento else None,
             'altura_4': self.extrair_valor_dioptria(row.get(mapeamento.get('altura_4'))) if 'altura_4' in mapeamento else None,
             
-            # Adição
+            # Adio
             'adicao': self.extrair_valor_dioptria(row.get(mapeamento.get('adicao'))) if 'adicao' in mapeamento else None,
             
             # Metadados
             'data_processamento': datetime.now().strftime('%d/%m/%Y %H:%M:%S')
         }
         
-        # Contar estatísticas
+        # Contar estatsticas
         if os_dioptria['ponte'] is not None:
             self.estatisticas['com_ponte'] += 1
         if os_dioptria['horizontal'] is not None:
@@ -291,15 +291,17 @@ class ExtratorDioptrias:
         return os_dioptria
     
     def processar_todas_dioptrias(self):
-        """Processa todas as dioptrías de todos os arquivos"""
-        print("👁️ EXTRATOR COMPLETO DE DIOPTRÍAS")
+        """Processa todas as dioptras de todos os arquivos"""
+        print(" EXTRATOR COMPLETO DE DIOPTRAS")
         print("=" * 80)
-        print("🔍 Processando TODOS os campos de dioptrías")
-        print("📊 25 campos: Armação + OD + OE + Conjuntos 3/4 + Adição")
+        print(" Processando TODOS os campos de dioptras")
+        print(" 25 campos: Armao + OD + OE + Conjuntos 3/4 + Adio")
         print("=" * 80)
         
         # Processar todos os arquivos
-        arquivos = list(Path("data/raw").glob("OS*.xlsm")) + list(Path("data/raw").glob("OS*.xlsx"))
+        arquivos = list(Path("data/raw").glob("*.xlsm")) + list(Path("data/raw").glob("*.xlsx"))
+        # Filtrar arquivos temporários do Excel
+        arquivos = [f for f in arquivos if not f.name.startswith('~$')]
         logger.info(f"Encontrados {len(arquivos)} arquivos para processar")
         
         for arquivo in arquivos:
@@ -314,7 +316,7 @@ class ExtratorDioptrias:
         return output_file
     
     def salvar_dioptrias(self):
-        """Salva dados de dioptrías em Excel"""
+        """Salva dados de dioptras em Excel"""
         output_dir = Path("data/processed")
         output_dir.mkdir(parents=True, exist_ok=True)
         
@@ -324,10 +326,10 @@ class ExtratorDioptrias:
         df_dioptrias = pd.DataFrame(self.os_com_dioptrias)
         
         with pd.ExcelWriter(output_file, engine='openpyxl') as writer:
-            # Base principal de dioptrías
+            # Base principal de dioptras
             df_dioptrias.to_excel(writer, sheet_name='Dioptrias_Completas', index=False)
             
-            # Estatísticas por loja
+            # Estatsticas por loja
             stats_loja = df_dioptrias.groupby('loja').agg({
                 'numero_os': 'count',
                 'ponte': lambda x: x.notna().sum(),
@@ -343,7 +345,7 @@ class ExtratorDioptrias:
             })
             stats_loja.to_excel(writer, sheet_name='Estatisticas_Por_Loja')
             
-            # Análise de graus (ESF mais comuns)
+            # Anlise de graus (ESF mais comuns)
             esf_od_values = df_dioptrias['esf_od'].dropna()
             esf_oe_values = df_dioptrias['esf_oe'].dropna()
             
@@ -354,36 +356,36 @@ class ExtratorDioptrias:
                 ])
                 analise_graus.to_excel(writer, sheet_name='Analise_Graus', index=False)
         
-        logger.info(f"Dioptrías salvas: {output_file}")
+        logger.info(f"Dioptras salvas: {output_file}")
         return output_file
     
     def exibir_resultados(self, output_file):
-        """Exibe resultados da extração"""
-        print(f"\n📊 DIOPTRÍAS EXTRAÍDAS:")
+        """Exibe resultados da extrao"""
+        print(f"\n DIOPTRAS EXTRADAS:")
         print("=" * 80)
-        print(f"📁 Arquivos processados: {self.estatisticas['arquivos_processados']}")
-        print(f"👁️ Total de OS: {self.estatisticas['total_os']:,}")
-        print(f"🔍 Com ponte: {self.estatisticas['com_ponte']:,} ({self.estatisticas['com_ponte']/self.estatisticas['total_os']*100:.1f}%)")
-        print(f"📏 Com horizontal: {self.estatisticas['com_horizontal']:,} ({self.estatisticas['com_horizontal']/self.estatisticas['total_os']*100:.1f}%)")
-        print(f"👁️ Com ESF OD: {self.estatisticas['com_esf_od']:,} ({self.estatisticas['com_esf_od']/self.estatisticas['total_os']*100:.1f}%)")
-        print(f"👁️ Com ESF OE: {self.estatisticas['com_esf_oe']:,} ({self.estatisticas['com_esf_oe']/self.estatisticas['total_os']*100:.1f}%)")
-        print(f"➕ Com adição: {self.estatisticas['com_adicao']:,} ({self.estatisticas['com_adicao']/self.estatisticas['total_os']*100:.1f}%)")
+        print(f" Arquivos processados: {self.estatisticas['arquivos_processados']}")
+        print(f" Total de OS: {self.estatisticas['total_os']:,}")
+        print(f" Com ponte: {self.estatisticas['com_ponte']:,} ({self.estatisticas['com_ponte']/self.estatisticas['total_os']*100:.1f}%)")
+        print(f" Com horizontal: {self.estatisticas['com_horizontal']:,} ({self.estatisticas['com_horizontal']/self.estatisticas['total_os']*100:.1f}%)")
+        print(f" Com ESF OD: {self.estatisticas['com_esf_od']:,} ({self.estatisticas['com_esf_od']/self.estatisticas['total_os']*100:.1f}%)")
+        print(f" Com ESF OE: {self.estatisticas['com_esf_oe']:,} ({self.estatisticas['com_esf_oe']/self.estatisticas['total_os']*100:.1f}%)")
+        print(f" Com adio: {self.estatisticas['com_adicao']:,} ({self.estatisticas['com_adicao']/self.estatisticas['total_os']*100:.1f}%)")
         
-        print(f"\n📁 ARQUIVO GERADO:")
+        print(f"\n ARQUIVO GERADO:")
         print("=" * 80)
-        print(f"✅ {output_file}")
-        print(f"📊 Sheets: Dioptrias_Completas, Estatisticas_Por_Loja, Analise_Graus")
+        print(f" {output_file}")
+        print(f" Sheets: Dioptrias_Completas, Estatisticas_Por_Loja, Analise_Graus")
         
-        print(f"\n👁️ CAMPOS PROCESSADOS:")
+        print(f"\n CAMPOS PROCESSADOS:")
         print("=" * 80)
-        print("🔍 Medidas da armação: ponte, horizontal, diag_maior, vertical")
-        print("👁️ Olho Direito (OD): esf_od, cil_od, eixo_od, dnp_od, altura_od")
-        print("👁️ Olho Esquerdo (OE): esf_oe, cil_oe, eixo_oe, dnp_oe, altura_oe")
-        print("👁️ Conjuntos 3 e 4: esf_3, cil_3, eixo_3, esf_4, cil_4, eixo_4")
-        print("➕ Adição: adicao")
+        print(" Medidas da armao: ponte, horizontal, diag_maior, vertical")
+        print(" Olho Direito (OD): esf_od, cil_od, eixo_od, dnp_od, altura_od")
+        print(" Olho Esquerdo (OE): esf_oe, cil_oe, eixo_oe, dnp_oe, altura_oe")
+        print(" Conjuntos 3 e 4: esf_3, cil_3, eixo_3, esf_4, cil_4, eixo_4")
+        print(" Adio: adicao")
 
 def main():
-    """Função principal"""
+    """Funo principal"""
     extrator = ExtratorDioptrias()
     output_file = extrator.processar_todas_dioptrias()
     return output_file

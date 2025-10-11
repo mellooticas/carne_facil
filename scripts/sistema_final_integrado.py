@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """
-🎯 SISTEMA FINAL INTEGRADO - ÓTICAS CARNE FÁCIL
+ SISTEMA FINAL INTEGRADO - TICAS CARNE FCIL
 ================================================================================
-📊 Combina TODOS os dados extraídos em um sistema completo:
-🧑‍💼 3,262 Clientes únicos + 🔗 5,624 OS relacionadas
-👁️ 12,309 Dioptrías + 💰 R$ 70.2M em vendas
-📈 Dashboard executivo + Análises detalhadas
+ Combina TODOS os dados extrados em um sistema completo:
+ 3,262 Clientes nicos +  5,624 OS relacionadas
+ 12,309 Dioptras +  R$ 70.2M em vendas
+ Dashboard executivo + Anlises detalhadas
 ================================================================================
 """
 
@@ -25,8 +25,8 @@ logging.basicConfig(
 )
 
 def aplicar_formatacao_excel(ws, df, titulo=""):
-    """Aplica formatação profissional ao Excel"""
-    # Título
+    """Aplica formatao profissional ao Excel"""
+    # Ttulo
     if titulo:
         ws.insert_rows(1)
         ws['A1'] = titulo
@@ -73,19 +73,19 @@ def criar_dashboard_executivo(df_clientes, df_relacionamentos, df_dioptrias, df_
     total_vendas = df_vendas['Valor_total'].sum() if 'Valor_total' in df_vendas.columns else 0
     os_com_vendas = len(df_vendas[df_vendas['Valor_total'] > 0]) if 'Valor_total' in df_vendas.columns else 0
     
-    # Dioptrías
+    # Dioptras
     os_com_dioptrias = len(df_dioptrias) if not df_dioptrias.empty else 0
     
     # Criar dashboard
     dashboard_data = [
-        ['INDICADOR', 'VALOR', 'DESCRIÇÃO'],
-        ['Total de Clientes', f'{total_clientes:,}', 'Clientes únicos identificados'],
-        ['Total de OS', f'{total_os:,}', 'Ordens de serviço processadas'],
+        ['INDICADOR', 'VALOR', 'DESCRIO'],
+        ['Total de Clientes', f'{total_clientes:,}', 'Clientes nicos identificados'],
+        ['Total de OS', f'{total_os:,}', 'Ordens de servio processadas'],
         ['OS Identificadas', f'{os_identificadas:,}', 'OS conectadas com clientes'],
-        ['Taxa de Identificação', f'{taxa_identificacao:.1f}%', 'Percentual de OS com cliente conhecido'],
+        ['Taxa de Identificao', f'{taxa_identificacao:.1f}%', 'Percentual de OS com cliente conhecido'],
         ['Total em Vendas', f'R$ {total_vendas:,.2f}', 'Valor total das vendas registradas'],
         ['OS com Vendas', f'{os_com_vendas:,}', 'OS que possuem dados de vendas'],
-        ['OS com Dioptrías', f'{os_com_dioptrias:,}', 'OS com dados de prescrição'],
+        ['OS com Dioptras', f'{os_com_dioptrias:,}', 'OS com dados de prescrio'],
         ['Lojas Ativas', '3', 'MAUA, SAO_MATEUS, RIO_PEQUENO'],
         ['Sistemas', '2', 'LANCASTER, OTM'],
     ]
@@ -93,7 +93,7 @@ def criar_dashboard_executivo(df_clientes, df_relacionamentos, df_dioptrias, df_
     return pd.DataFrame(dashboard_data[1:], columns=dashboard_data[0])
 
 def criar_analise_por_loja(df_relacionamentos, df_vendas):
-    """Cria análise detalhada por loja"""
+    """Cria anlise detalhada por loja"""
     
     analise_lojas = []
     
@@ -125,7 +125,7 @@ def criar_analise_por_loja(df_relacionamentos, df_vendas):
     return pd.DataFrame(analise_lojas)
 
 def criar_top_clientes(df_relacionamentos, df_vendas):
-    """Identifica top clientes por número de OS e vendas"""
+    """Identifica top clientes por nmero de OS e vendas"""
     
     # Contar OS por cliente
     clientes_os = df_relacionamentos[df_relacionamentos['Cliente_ID'].notna()].groupby('Cliente_ID').agg({
@@ -134,7 +134,7 @@ def criar_top_clientes(df_relacionamentos, df_vendas):
     }).reset_index()
     clientes_os.columns = ['Cliente_ID', 'Total_OS', 'Nome_Cliente']
     
-    # Adicionar vendas se disponível
+    # Adicionar vendas se disponvel
     if not df_vendas.empty and 'Cliente_ID' in df_vendas.columns:
         vendas_cliente = df_vendas.groupby('Cliente_ID')['Valor_total'].sum().reset_index()
         vendas_cliente.columns = ['Cliente_ID', 'Total_Vendas']
@@ -143,77 +143,77 @@ def criar_top_clientes(df_relacionamentos, df_vendas):
     else:
         clientes_os['Total_Vendas'] = 0
     
-    # Ordenar por número de OS
+    # Ordenar por nmero de OS
     clientes_os = clientes_os.sort_values('Total_OS', ascending=False)
     
     return clientes_os.head(50)  # Top 50
 
 def main():
-    print("🎯 SISTEMA FINAL INTEGRADO - ÓTICAS CARNE FÁCIL")
+    print(" SISTEMA FINAL INTEGRADO - TICAS CARNE FCIL")
     print("=" * 80)
-    print("📊 Combinando todos os dados extraídos")
-    print("🚀 Gerando relatório executivo completo")
+    print(" Combinando todos os dados extrados")
+    print(" Gerando relatrio executivo completo")
     print("=" * 80)
     
-    # Diretórios
+    # Diretrios
     data_dir = Path("data")
     processed_dir = data_dir / "processed"
     
     # 1. Carregar todos os dados processados
-    print("\n📋 Carregando dados processados...")
+    print("\n Carregando dados processados...")
     
     # Clientes
     clientes_files = list(processed_dir.glob("BASE_CLIENTES_COM_ID_*.xlsx"))
     if not clientes_files:
-        print("❌ Arquivo de clientes não encontrado!")
+        print(" Arquivo de clientes no encontrado!")
         return
     df_clientes = pd.read_excel(clientes_files[-1])
-    print(f"✅ {len(df_clientes)} clientes únicos")
+    print(f" {len(df_clientes)} clientes nicos")
     
     # Relacionamentos OS-Cliente
     relacionamentos_files = list(processed_dir.glob("RELACIONAMENTO_OS_CLIENTE_*.xlsx"))
     if relacionamentos_files:
         df_relacionamentos = pd.read_excel(relacionamentos_files[-1])
-        print(f"✅ {len(df_relacionamentos)} relacionamentos OS-Cliente")
+        print(f" {len(df_relacionamentos)} relacionamentos OS-Cliente")
     else:
-        print("⚠️  Relacionamentos não encontrados")
+        print("  Relacionamentos no encontrados")
         df_relacionamentos = pd.DataFrame()
     
-    # Dioptrías
+    # Dioptras
     dioptrias_files = list(processed_dir.glob("DIOPTRIAS_COMPLETAS_*.xlsx"))
     if dioptrias_files:
         df_dioptrias = pd.read_excel(dioptrias_files[-1])
-        print(f"✅ {len(df_dioptrias)} registros de dioptrías")
+        print(f" {len(df_dioptrias)} registros de dioptras")
     else:
-        print("⚠️  Dioptrías não encontradas")
+        print("  Dioptras no encontradas")
         df_dioptrias = pd.DataFrame()
     
     # Vendas
     vendas_files = list(processed_dir.glob("VENDAS_COMPLETAS_*.xlsx"))
     if vendas_files:
         df_vendas = pd.read_excel(vendas_files[-1])
-        print(f"✅ {len(df_vendas)} registros de vendas")
+        print(f" {len(df_vendas)} registros de vendas")
     else:
-        print("⚠️  Vendas não encontradas")
+        print("  Vendas no encontradas")
         df_vendas = pd.DataFrame()
     
-    # 2. Criar análises integradas
-    print("\n📊 Criando análises integradas...")
+    # 2. Criar anlises integradas
+    print("\n Criando anlises integradas...")
     
     # Dashboard executivo
     df_dashboard = criar_dashboard_executivo(df_clientes, df_relacionamentos, df_dioptrias, df_vendas)
-    print("✅ Dashboard executivo criado")
+    print(" Dashboard executivo criado")
     
-    # Análise por loja
+    # Anlise por loja
     df_analise_lojas = criar_analise_por_loja(df_relacionamentos, df_vendas)
-    print("✅ Análise por loja criada")
+    print(" Anlise por loja criada")
     
     # Top clientes
     df_top_clientes = criar_top_clientes(df_relacionamentos, df_vendas)
-    print("✅ Top clientes identificados")
+    print(" Top clientes identificados")
     
     # 3. Gerar arquivo Excel final
-    print("\n📁 Gerando arquivo Excel final...")
+    print("\n Gerando arquivo Excel final...")
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     output_file = processed_dir / f"SISTEMA_INTEGRADO_OTICAS_{timestamp}.xlsx"
     
@@ -221,7 +221,7 @@ def main():
         # 1. Dashboard Executivo
         df_dashboard.to_excel(writer, sheet_name='Dashboard_Executivo', index=False)
         
-        # 2. Análise por Loja
+        # 2. Anlise por Loja
         df_analise_lojas.to_excel(writer, sheet_name='Analise_Por_Loja', index=False)
         
         # 3. Top Clientes
@@ -234,7 +234,7 @@ def main():
         if not df_relacionamentos.empty:
             df_relacionamentos.head(1000).to_excel(writer, sheet_name='Relacionamentos_Sample', index=False)
         
-        # 6. Dioptrías (sample)
+        # 6. Dioptras (sample)
         if not df_dioptrias.empty:
             df_dioptrias.head(1000).to_excel(writer, sheet_name='Dioptrias_Sample', index=False)
         
@@ -242,45 +242,45 @@ def main():
         if not df_vendas.empty:
             df_vendas.head(1000).to_excel(writer, sheet_name='Vendas_Sample', index=False)
     
-    # 4. Aplicar formatação
-    print("🎨 Aplicando formatação profissional...")
+    # 4. Aplicar formatao
+    print(" Aplicando formatao profissional...")
     wb = openpyxl.load_workbook(output_file)
     
     # Formatar sheets principais
     if 'Dashboard_Executivo' in wb.sheetnames:
-        aplicar_formatacao_excel(wb['Dashboard_Executivo'], df_dashboard, "DASHBOARD EXECUTIVO - ÓTICAS CARNE FÁCIL")
+        aplicar_formatacao_excel(wb['Dashboard_Executivo'], df_dashboard, "DASHBOARD EXECUTIVO - TICAS CARNE FCIL")
     
     if 'Analise_Por_Loja' in wb.sheetnames:
-        aplicar_formatacao_excel(wb['Analise_Por_Loja'], df_analise_lojas, "ANÁLISE DETALHADA POR LOJA")
+        aplicar_formatacao_excel(wb['Analise_Por_Loja'], df_analise_lojas, "ANLISE DETALHADA POR LOJA")
     
     if 'Top_Clientes' in wb.sheetnames:
         aplicar_formatacao_excel(wb['Top_Clientes'], df_top_clientes, "TOP 50 CLIENTES")
     
     wb.save(output_file)
     
-    # 5. Estatísticas finais
-    print(f"\n🎯 SISTEMA INTEGRADO CONCLUÍDO!")
+    # 5. Estatsticas finais
+    print(f"\n SISTEMA INTEGRADO CONCLUDO!")
     print("=" * 80)
-    print(f"📊 DADOS CONSOLIDADOS:")
-    print(f"   👥 {len(df_clientes):,} clientes únicos")
-    print(f"   🔗 {len(df_relacionamentos):,} relacionamentos OS-Cliente")
-    print(f"   👁️ {len(df_dioptrias):,} registros de dioptrías")
-    print(f"   💰 {len(df_vendas):,} registros de vendas")
-    print(f"   🏪 {len(df_analise_lojas)} lojas analisadas")
+    print(f" DADOS CONSOLIDADOS:")
+    print(f"    {len(df_clientes):,} clientes nicos")
+    print(f"    {len(df_relacionamentos):,} relacionamentos OS-Cliente")
+    print(f"    {len(df_dioptrias):,} registros de dioptras")
+    print(f"    {len(df_vendas):,} registros de vendas")
+    print(f"    {len(df_analise_lojas)} lojas analisadas")
     
-    print(f"\n📁 ARQUIVO FINAL:")
+    print(f"\n ARQUIVO FINAL:")
     print("=" * 80)
-    print(f"✅ {output_file}")
-    print(f"📊 7 sheets com análises completas")
-    print(f"🎨 Formatação profissional aplicada")
+    print(f" {output_file}")
+    print(f" 7 sheets com anlises completas")
+    print(f" Formatao profissional aplicada")
     
-    print(f"\n🚀 DESAFIO CONCLUÍDO COM SUCESSO!")
+    print(f"\n DESAFIO CONCLUDO COM SUCESSO!")
     print("=" * 80)
-    print(f"✅ Sistema completo de relacionamento Cliente-OS")
-    print(f"✅ Dioptrías e vendas integradas")
-    print(f"✅ Dashboard executivo para tomada de decisão")
-    print(f"✅ Análises por loja e top clientes")
-    print(f"✅ Base sólida para expansão futura")
+    print(f" Sistema completo de relacionamento Cliente-OS")
+    print(f" Dioptras e vendas integradas")
+    print(f" Dashboard executivo para tomada de deciso")
+    print(f" Anlises por loja e top clientes")
+    print(f" Base slida para expanso futura")
 
 if __name__ == "__main__":
     main()

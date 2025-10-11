@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Extrator Completo de Dados de Vendas e Produtos
-Processa TODOS os campos de vendas, produtos, códigos e pagamentos das OS
+Processa TODOS os campos de vendas, produtos, cdigos e pagamentos das OS
 """
 
 import pandas as pd
@@ -65,7 +65,7 @@ class ExtratorVendas:
             coluna_str = str(coluna).strip()
             coluna_lower = coluna_str.lower()
             
-            # Campos de produtos e códigos
+            # Campos de produtos e cdigos
             if any(termo in coluna_lower for termo in ['cod', 'codigo']) and 'trello' not in coluna_lower:
                 mapeamento['produtos'].append({
                     'tipo': 'codigo',
@@ -112,10 +112,10 @@ class ExtratorVendas:
             elif 'resta' in coluna_lower:
                 mapeamento['especiais']['resta'] = coluna
             
-            # Campos específicos da imagem
+            # Campos especficos da imagem
             elif 'Cod_trello' in coluna_str:
                 mapeamento['especiais']['cod_trello'] = coluna
-            elif coluna_str in ['Descrição', 'Descrição18', 'Descrição21', 'Descrição24', 'Descrição27']:
+            elif coluna_str in ['Descrio', 'Descrio18', 'Descrio21', 'Descrio24', 'Descrio27']:
                 numero = re.findall(r'\d+', coluna_str)
                 num = numero[0] if numero else '1'
                 mapeamento['produtos'].append({
@@ -137,14 +137,14 @@ class ExtratorVendas:
         return mapeamento
     
     def extrair_valor_monetario(self, valor):
-        """Extrai e normaliza valor monetário"""
+        """Extrai e normaliza valor monetrio"""
         if pd.isna(valor) or str(valor).strip() == '':
             return None
         
         try:
             valor_str = str(valor).strip()
             
-            # Remover símbolos e texto comum
+            # Remover smbolos e texto comum
             valor_str = valor_str.replace('R$', '').replace('R', '').replace('$', '')
             valor_str = valor_str.replace('.', '').replace(',', '.')
             valor_str = re.sub(r'[^\d\.]', '', valor_str)
@@ -156,7 +156,7 @@ class ExtratorVendas:
             return None
     
     def extrair_codigo_produto(self, codigo):
-        """Extrai código do produto"""
+        """Extrai cdigo do produto"""
         if pd.isna(codigo) or str(codigo).strip() == '':
             return None
         
@@ -166,7 +166,7 @@ class ExtratorVendas:
         return None
     
     def extrair_descricao_produto(self, descricao):
-        """Extrai descrição do produto"""
+        """Extrai descrio do produto"""
         if pd.isna(descricao) or str(descricao).strip() == '':
             return None
         
@@ -176,7 +176,7 @@ class ExtratorVendas:
         return None
     
     def processar_arquivo_vendas(self, arquivo_path):
-        """Processa arquivo específico extraindo dados de vendas"""
+        """Processa arquivo especfico extraindo dados de vendas"""
         logger.info(f"Processando vendas: {arquivo_path.name}")
         
         try:
@@ -213,7 +213,7 @@ class ExtratorVendas:
                 logger.warning(f"Nenhum campo de venda encontrado em {arquivo_path.name}")
                 return 0
             
-            # Identificar campos básicos
+            # Identificar campos bsicos
             campos_basicos = self.identificar_campos_basicos(df.columns)
             
             # Identificar loja
@@ -233,21 +233,21 @@ class ExtratorVendas:
             self.estatisticas['arquivos_processados'] += 1
             self.estatisticas['total_os'] += os_processadas
             
-            logger.info(f"✅ {arquivo_path.name}: {os_processadas} OS com vendas | Loja: {loja}")
+            logger.info(f" {arquivo_path.name}: {os_processadas} OS com vendas | Loja: {loja}")
             return os_processadas
             
         except Exception as e:
-            logger.error(f"❌ Erro em {arquivo_path.name}: {e}")
+            logger.error(f" Erro em {arquivo_path.name}: {e}")
             return 0
     
     def identificar_campos_basicos(self, colunas):
-        """Identifica campos básicos para identificação"""
+        """Identifica campos bsicos para identificao"""
         campos = {}
         
         for col in colunas:
             col_str = str(col).lower().strip()
             
-            if any(termo in col_str for termo in ['os n°', 'os:', 'os', 'ordem']):
+            if any(termo in col_str for termo in ['os n', 'os:', 'os', 'ordem']):
                 campos['numero_os'] = col
             elif any(termo in col_str for termo in ['nome:', 'nome', 'cliente']):
                 campos['nome'] = col
@@ -261,20 +261,20 @@ class ExtratorVendas:
         return campos
     
     def extrair_vendas_linha(self, row, mapeamento, campos_basicos, loja, arquivo, linha):
-        """Extrai dados de vendas de uma linha específica"""
-        # Dados básicos de identificação
+        """Extrai dados de vendas de uma linha especfica"""
+        # Dados bsicos de identificao
         numero_os = str(row.get(campos_basicos.get('numero_os', ''))).strip() if campos_basicos.get('numero_os') else None
         nome = str(row.get(campos_basicos.get('nome', ''))).strip() if campos_basicos.get('nome') else None
         cpf = str(row.get(campos_basicos.get('cpf', ''))).strip() if campos_basicos.get('cpf') else None
         consultor = str(row.get(campos_basicos.get('consultor', ''))).strip() if campos_basicos.get('consultor') else None
         
-        # Se não tem número da OS, pular
+        # Se no tem nmero da OS, pular
         if not numero_os or numero_os == 'nan':
             return None
         
         # Inicializar estrutura de venda
         os_venda = {
-            # Identificação
+            # Identificao
             'numero_os': numero_os,
             'nome_informado': nome if nome != 'nan' else None,
             'cpf_informado': cpf if cpf != 'nan' else None,
@@ -283,10 +283,10 @@ class ExtratorVendas:
             'arquivo_origem': arquivo,
             'linha_arquivo': linha,
             
-            # Código especial (Trello)
+            # Cdigo especial (Trello)
             'cod_trello': self.extrair_codigo_produto(row.get(mapeamento['especiais'].get('cod_trello'))) if 'cod_trello' in mapeamento['especiais'] else None,
             
-            # Produtos (até 5 produtos diferentes)
+            # Produtos (at 5 produtos diferentes)
             'produto1_codigo': None,
             'produto1_descricao': None,
             'produto1_valor': None,
@@ -322,7 +322,7 @@ class ExtratorVendas:
         produtos_ordenados = sorted(mapeamento['produtos'], key=lambda x: x['posicao'])
         valores_ordenados = sorted(mapeamento['valores'], key=lambda x: x['posicao'])
         
-        # Agrupar por posição aproximada
+        # Agrupar por posio aproximada
         i = 0
         while i < len(produtos_ordenados) and produto_count <= 5:
             produto = produtos_ordenados[i]
@@ -330,11 +330,11 @@ class ExtratorVendas:
             if produto['tipo'] == 'codigo' or 'codigo' in produto['tipo']:
                 codigo = self.extrair_codigo_produto(row.get(produto['coluna']))
                 
-                # Procurar descrição próxima
+                # Procurar descrio prxima
                 descricao = None
                 valor = None
                 
-                # Buscar descrição e valor nas próximas colunas
+                # Buscar descrio e valor nas prximas colunas
                 for j in range(i+1, min(i+3, len(produtos_ordenados))):
                     if produtos_ordenados[j]['tipo'] == 'descricao' or 'descricao' in produtos_ordenados[j]['tipo']:
                         descricao = self.extrair_descricao_produto(row.get(produtos_ordenados[j]['coluna']))
@@ -346,7 +346,7 @@ class ExtratorVendas:
                         valor = self.extrair_valor_monetario(row.get(valor_item['coluna']))
                         break
                 
-                # Adicionar produto se tem pelo menos código ou descrição
+                # Adicionar produto se tem pelo menos cdigo ou descrio
                 if codigo or descricao:
                     os_venda[f'produto{produto_count}_codigo'] = codigo
                     os_venda[f'produto{produto_count}_descricao'] = descricao
@@ -373,7 +373,7 @@ class ExtratorVendas:
                 os_venda[f'sinal_{pagto_count}'] = sinal_valor
                 pagto_count += 1
         
-        # Contar estatísticas
+        # Contar estatsticas
         if os_venda['valor_total'] is not None:
             self.estatisticas['com_total'] += 1
             self.estatisticas['valor_total_vendas'] += os_venda['valor_total']
@@ -394,14 +394,16 @@ class ExtratorVendas:
     
     def processar_todas_vendas(self):
         """Processa todas as vendas de todos os arquivos"""
-        print("💰 EXTRATOR COMPLETO DE DADOS DE VENDAS")
+        print(" EXTRATOR COMPLETO DE DADOS DE VENDAS")
         print("=" * 80)
-        print("🛒 Processando produtos, códigos, valores e pagamentos")
-        print("💳 Códigos + Descrições + Valores + Pagamentos + Sinais")
+        print(" Processando produtos, cdigos, valores e pagamentos")
+        print(" Cdigos + Descries + Valores + Pagamentos + Sinais")
         print("=" * 80)
         
         # Processar todos os arquivos
-        arquivos = list(Path("data/raw").glob("OS*.xlsm")) + list(Path("data/raw").glob("OS*.xlsx"))
+        arquivos = list(Path("data/raw").glob("*.xlsm")) + list(Path("data/raw").glob("*.xlsx"))
+        # Filtrar arquivos temporários do Excel
+        arquivos = [f for f in arquivos if not f.name.startswith('~$')]
         logger.info(f"Encontrados {len(arquivos)} arquivos para processar")
         
         for arquivo in arquivos:
@@ -429,7 +431,7 @@ class ExtratorVendas:
             # Base principal de vendas
             df_vendas.to_excel(writer, sheet_name='Vendas_Completas', index=False)
             
-            # Estatísticas por loja
+            # Estatsticas por loja
             stats_loja = df_vendas.groupby('loja').agg({
                 'numero_os': 'count',
                 'valor_total': ['count', 'sum', 'mean'],
@@ -469,34 +471,34 @@ class ExtratorVendas:
         return output_file
     
     def exibir_resultados(self, output_file):
-        """Exibe resultados da extração de vendas"""
-        print(f"\n📊 VENDAS EXTRAÍDAS:")
+        """Exibe resultados da extrao de vendas"""
+        print(f"\n VENDAS EXTRADAS:")
         print("=" * 80)
-        print(f"📁 Arquivos processados: {self.estatisticas['arquivos_processados']}")
-        print(f"💰 Total de OS: {self.estatisticas['total_os']:,}")
-        print(f"💵 Com valor total: {self.estatisticas['com_total']:,} ({self.estatisticas['com_total']/self.estatisticas['total_os']*100:.1f}%)")
-        print(f"🛒 Com produto 1: {self.estatisticas['com_produto1']:,} ({self.estatisticas['com_produto1']/self.estatisticas['total_os']*100:.1f}%)")
-        print(f"💳 Com pagto 1: {self.estatisticas['com_pagto1']:,} ({self.estatisticas['com_pagto1']/self.estatisticas['total_os']*100:.1f}%)")
-        print(f"💰 Com sinal: {self.estatisticas['com_sinal']:,} ({self.estatisticas['com_sinal']/self.estatisticas['total_os']*100:.1f}%)")
-        print(f"💸 Valor total vendas: R$ {self.estatisticas['valor_total_vendas']:,.2f}")
-        print(f"🏷️ Produtos únicos: {len(self.produtos_identificados):,}")
+        print(f" Arquivos processados: {self.estatisticas['arquivos_processados']}")
+        print(f" Total de OS: {self.estatisticas['total_os']:,}")
+        print(f" Com valor total: {self.estatisticas['com_total']:,} ({self.estatisticas['com_total']/self.estatisticas['total_os']*100:.1f}%)")
+        print(f" Com produto 1: {self.estatisticas['com_produto1']:,} ({self.estatisticas['com_produto1']/self.estatisticas['total_os']*100:.1f}%)")
+        print(f" Com pagto 1: {self.estatisticas['com_pagto1']:,} ({self.estatisticas['com_pagto1']/self.estatisticas['total_os']*100:.1f}%)")
+        print(f" Com sinal: {self.estatisticas['com_sinal']:,} ({self.estatisticas['com_sinal']/self.estatisticas['total_os']*100:.1f}%)")
+        print(f" Valor total vendas: R$ {self.estatisticas['valor_total_vendas']:,.2f}")
+        print(f" Produtos nicos: {len(self.produtos_identificados):,}")
         
-        print(f"\n📁 ARQUIVO GERADO:")
+        print(f"\n ARQUIVO GERADO:")
         print("=" * 80)
-        print(f"✅ {output_file}")
-        print(f"📊 Sheets: Vendas_Completas, Estatisticas_Por_Loja, Top_Produtos")
+        print(f" {output_file}")
+        print(f" Sheets: Vendas_Completas, Estatisticas_Por_Loja, Top_Produtos")
         
-        print(f"\n💰 CAMPOS PROCESSADOS:")
+        print(f"\n CAMPOS PROCESSADOS:")
         print("=" * 80)
-        print("🏷️ Cod_trello: Código especial do produto")
-        print("🛒 Produtos 1-5: codigo, descricao, valor de cada produto")
-        print("💵 Valor_total: Total da venda")
-        print("💳 Pagto 1/2: Formas de pagamento")
-        print("💰 Sinal 1/2: Valores dos sinais")
-        print("💸 Valor_resta: Valor restante a pagar")
+        print(" Cod_trello: Cdigo especial do produto")
+        print(" Produtos 1-5: codigo, descricao, valor de cada produto")
+        print(" Valor_total: Total da venda")
+        print(" Pagto 1/2: Formas de pagamento")
+        print(" Sinal 1/2: Valores dos sinais")
+        print(" Valor_resta: Valor restante a pagar")
 
 def main():
-    """Função principal"""
+    """Funo principal"""
     extrator = ExtratorVendas()
     output_file = extrator.processar_todas_vendas()
     return output_file

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Sistema de ID Cliente Único
-Cria numeração única para relacionamento Cliente ↔ OS
+Sistema de ID Cliente nico
+Cria numerao nica para relacionamento Cliente  OS
 """
 
 import pandas as pd
@@ -39,12 +39,12 @@ class SistemaIDCliente:
                 arquivo_base = arquivo
         
         if not arquivo_base:
-            raise FileNotFoundError("Base de Clientes Master não encontrada!")
+            raise FileNotFoundError("Base de Clientes Master no encontrada!")
         
         logger.info(f"Carregando: {arquivo_base.name}")
         self.base_clientes = pd.read_excel(arquivo_base, sheet_name='Base_Clientes_Master')
         
-        logger.info(f"✅ {len(self.base_clientes)} clientes carregados")
+        logger.info(f" {len(self.base_clientes)} clientes carregados")
     
     def limpar_cpf(self, cpf):
         """Limpa CPF para chave"""
@@ -65,7 +65,7 @@ class SistemaIDCliente:
         return nome_str if nome_str else None
     
     def gerar_chave_cliente(self, nome, cpf, data_nascimento=None):
-        """Gera chave única para o cliente"""
+        """Gera chave nica para o cliente"""
         # Prioridade 1: CPF limpo
         cpf_limpo = self.limpar_cpf(cpf)
         if cpf_limpo:
@@ -81,17 +81,17 @@ class SistemaIDCliente:
         if nome_limpo:
             return f"NOME_{nome_limpo}"
         
-        # Último recurso: Hash baseado nos dados disponíveis
+        # ltimo recurso: Hash baseado nos dados disponveis
         dados_hash = str(nome or '') + str(cpf or '') + str(data_nascimento or '')
         hash_obj = hashlib.md5(dados_hash.encode())
         return f"HASH_{hash_obj.hexdigest()[:8]}"
     
     def criar_sistema_ids(self):
-        """Cria sistema de IDs únicos para todos os clientes"""
-        print("🔗 SISTEMA DE ID CLIENTE ÚNICO")
+        """Cria sistema de IDs nicos para todos os clientes"""
+        print(" SISTEMA DE ID CLIENTE NICO")
         print("=" * 80)
-        print("🎯 Criando numeração única para relacionamento")
-        print("📋 Base: CPF > Nome+Data > Nome > Hash")
+        print(" Criando numerao nica para relacionamento")
+        print(" Base: CPF > Nome+Data > Nome > Hash")
         print("=" * 80)
         
         # Carregar base
@@ -102,14 +102,14 @@ class SistemaIDCliente:
         chaves_processadas = set()
         
         for idx, cliente in self.base_clientes.iterrows():
-            # Gerar chave única
+            # Gerar chave nica
             chave = self.gerar_chave_cliente(
                 cliente.get('nome_completo'),
                 cliente.get('cpf'),
                 cliente.get('data_nascimento')
             )
             
-            # Verificar se já foi processada (duplicado)
+            # Verificar se j foi processada (duplicado)
             if chave in chaves_processadas:
                 # Encontrar ID existente
                 id_cliente = self.mapeamento_ids[chave]
@@ -121,7 +121,7 @@ class SistemaIDCliente:
                 chaves_processadas.add(chave)
                 id_contador += 1
             
-            # Adicionar à lista com ID
+            # Adicionar  lista com ID
             cliente_com_id = dict(cliente)
             cliente_com_id['ID_CLIENTE'] = id_cliente
             cliente_com_id['CHAVE_CLIENTE'] = chave
@@ -129,7 +129,7 @@ class SistemaIDCliente:
             
             self.clientes_com_id.append(cliente_com_id)
             
-            # Estatísticas
+            # Estatsticas
             if cliente.get('cpf'):
                 self.estatisticas['com_cpf'] += 1
             else:
@@ -146,7 +146,7 @@ class SistemaIDCliente:
         return output_file, self.mapeamento_ids
     
     def salvar_base_com_ids(self):
-        """Salva base de clientes com IDs únicos"""
+        """Salva base de clientes com IDs nicos"""
         output_dir = Path("data/processed")
         output_dir.mkdir(parents=True, exist_ok=True)
         
@@ -155,7 +155,7 @@ class SistemaIDCliente:
         
         df_clientes = pd.DataFrame(self.clientes_com_id)
         
-        # Reordenar colunas para colocar ID no início
+        # Reordenar colunas para colocar ID no incio
         colunas = ['ID_CLIENTE', 'CHAVE_CLIENTE', 'METODO_ID'] + [col for col in df_clientes.columns if col not in ['ID_CLIENTE', 'CHAVE_CLIENTE', 'METODO_ID']]
         df_clientes = df_clientes[colunas]
         
@@ -163,7 +163,7 @@ class SistemaIDCliente:
             # Base principal com IDs
             df_clientes.to_excel(writer, sheet_name='Clientes_Com_ID', index=False)
             
-            # Estatísticas de IDs
+            # Estatsticas de IDs
             stats_metodos = df_clientes['METODO_ID'].value_counts().reset_index()
             stats_metodos.columns = ['Metodo_ID', 'Quantidade']
             stats_metodos['Percentual'] = (stats_metodos['Quantidade'] / len(df_clientes) * 100).round(1)
@@ -186,41 +186,41 @@ class SistemaIDCliente:
     
     def exibir_resultados(self, output_file):
         """Exibe resultados do sistema de IDs"""
-        print(f"\n📊 SISTEMA DE IDs CRIADO:")
+        print(f"\n SISTEMA DE IDs CRIADO:")
         print("=" * 80)
-        print(f"👥 Total de clientes: {self.estatisticas['total_clientes']:,}")
-        print(f"🔗 IDs únicos gerados: {len(self.mapeamento_ids):,}")
-        print(f"🆔 Com CPF: {self.estatisticas['com_cpf']:,} ({self.estatisticas['com_cpf']/self.estatisticas['total_clientes']*100:.1f}%)")
-        print(f"❌ Sem CPF: {self.estatisticas['sem_cpf']:,} ({self.estatisticas['sem_cpf']/self.estatisticas['total_clientes']*100:.1f}%)")
-        print(f"🔄 Duplicados resolvidos: {self.estatisticas['duplicados_resolvidos']:,}")
+        print(f" Total de clientes: {self.estatisticas['total_clientes']:,}")
+        print(f" IDs nicos gerados: {len(self.mapeamento_ids):,}")
+        print(f" Com CPF: {self.estatisticas['com_cpf']:,} ({self.estatisticas['com_cpf']/self.estatisticas['total_clientes']*100:.1f}%)")
+        print(f" Sem CPF: {self.estatisticas['sem_cpf']:,} ({self.estatisticas['sem_cpf']/self.estatisticas['total_clientes']*100:.1f}%)")
+        print(f" Duplicados resolvidos: {self.estatisticas['duplicados_resolvidos']:,}")
         
-        # Estatísticas por método
+        # Estatsticas por mtodo
         df_clientes = pd.DataFrame(self.clientes_com_id)
         metodos = df_clientes['METODO_ID'].value_counts()
         
-        print(f"\n🔍 MÉTODOS DE IDENTIFICAÇÃO:")
+        print(f"\n MTODOS DE IDENTIFICAO:")
         for metodo, count in metodos.items():
             print(f"   {metodo}: {count:,} clientes ({count/len(df_clientes)*100:.1f}%)")
         
-        print(f"\n📁 ARQUIVO GERADO:")
+        print(f"\n ARQUIVO GERADO:")
         print("=" * 80)
-        print(f"✅ {output_file}")
-        print(f"📊 Sheets: Clientes_Com_ID, Estatisticas_Metodos, Mapeamento_Chaves")
+        print(f" {output_file}")
+        print(f" Sheets: Clientes_Com_ID, Estatisticas_Metodos, Mapeamento_Chaves")
         
-        print(f"\n🎯 ESTRUTURA DO ID:")
+        print(f"\n ESTRUTURA DO ID:")
         print("=" * 80)
-        print("🔗 ID_CLIENTE: CLI_000001, CLI_000002, ...")
-        print("🔑 CHAVE_CLIENTE: CPF_12345678901, NOME_JOAO_SILVA_01011980, ...")
-        print("🏷️ METODO_ID: CPF, NOME, HASH")
+        print(" ID_CLIENTE: CLI_000001, CLI_000002, ...")
+        print(" CHAVE_CLIENTE: CPF_12345678901, NOME_JOAO_SILVA_01011980, ...")
+        print(" METODO_ID: CPF, NOME, HASH")
         
-        print(f"\n✅ PRONTO PARA RELACIONAMENTO:")
+        print(f"\n PRONTO PARA RELACIONAMENTO:")
         print("=" * 80)
-        print("🔗 Cada cliente tem ID único")
-        print("📋 Base preparada para relacionar com OS")
-        print("🎯 Próximo: Extrair dados completos das OS")
+        print(" Cada cliente tem ID nico")
+        print(" Base preparada para relacionar com OS")
+        print(" Prximo: Extrair dados completos das OS")
 
 def main():
-    """Função principal"""
+    """Funo principal"""
     sistema = SistemaIDCliente()
     output_file, mapeamento = sistema.criar_sistema_ids()
     return output_file, mapeamento

@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """
-🔗 SISTEMA DE RELACIONAMENTO OS-CLIENTE
+ SISTEMA DE RELACIONAMENTO OS-CLIENTE
 ================================================================================
-🎯 Conecta as 14,337 OS com os clientes únicos criados
-📊 Combina: Clientes + OS + Dioptrías + Vendas
-🔍 Resultado: Sistema completo de relacionamentos
+ Conecta as 14,337 OS com os clientes nicos criados
+ Combina: Clientes + OS + Dioptras + Vendas
+ Resultado: Sistema completo de relacionamentos
 ================================================================================
 """
 
@@ -24,13 +24,13 @@ logging.basicConfig(
 )
 
 def normalizar_nome(nome):
-    """Normaliza nome para comparação"""
+    """Normaliza nome para comparao"""
     if pd.isna(nome) or not nome:
         return ""
     return re.sub(r'[^A-Za-z\s]', '', str(nome)).strip().upper()
 
 def normalizar_cpf(cpf):
-    """Normaliza CPF removendo pontuação"""
+    """Normaliza CPF removendo pontuao"""
     if pd.isna(cpf) or not cpf:
         return ""
     return re.sub(r'[^\d]', '', str(cpf))
@@ -44,7 +44,7 @@ def encontrar_cliente_id(nome_os, cpf_os, df_clientes):
     nome_norm = normalizar_nome(nome_os)
     cpf_norm = normalizar_cpf(cpf_os)
     
-    # 1. Busca por CPF exato (prioridade máxima)
+    # 1. Busca por CPF exato (prioridade mxima)
     if cpf_norm and len(cpf_norm) >= 8:
         match_cpf = df_clientes[df_clientes['CPF_normalizado'] == cpf_norm]
         if not match_cpf.empty:
@@ -122,10 +122,10 @@ def processar_arquivo_os(file_path, df_clientes):
         os_relacionadas = []
         
         for idx, row in df.iterrows():
-            # Buscar número da OS
+            # Buscar nmero da OS
             os_numero = None
             for col in df.columns:
-                if any(term in str(col).upper() for term in ['OS', 'NUMERO', 'Nº']):
+                if any(term in str(col).upper() for term in ['OS', 'NUMERO', 'N']):
                     val = row[col]
                     if pd.notna(val) and str(val).strip():
                         try:
@@ -144,7 +144,7 @@ def processar_arquivo_os(file_path, df_clientes):
             # Encontrar Cliente_ID
             cliente_id = encontrar_cliente_id(nome, cpf, df_clientes)
             
-            # Criar registro da relação
+            # Criar registro da relao
             relacao = {
                 'OS_Numero': os_numero,
                 'Loja': loja,
@@ -153,7 +153,7 @@ def processar_arquivo_os(file_path, df_clientes):
                 'Cliente_ID': cliente_id,
                 'Nome_OS': nome,
                 'CPF_OS': cpf,
-                'Status_Match': 'IDENTIFICADO' if cliente_id else 'NÃO_IDENTIFICADO'
+                'Status_Match': 'IDENTIFICADO' if cliente_id else 'NO_IDENTIFICADO'
             }
             
             os_relacionadas.append(relacao)
@@ -165,18 +165,18 @@ def processar_arquivo_os(file_path, df_clientes):
         return pd.DataFrame()
 
 def main():
-    print("🔗 SISTEMA DE RELACIONAMENTO OS-CLIENTE")
+    print(" SISTEMA DE RELACIONAMENTO OS-CLIENTE")
     print("=" * 80)
-    print("🎯 Conectando 14,337 OS com clientes únicos")
-    print("📊 Combinando todos os dados extraídos")
+    print(" Conectando 14,337 OS com clientes nicos")
+    print(" Combinando todos os dados extrados")
     print("=" * 80)
     
-    # Diretórios
+    # Diretrios
     data_dir = Path("data")
     processed_dir = data_dir / "processed"
     
     # 1. Carregar dados de clientes
-    print("\n📋 Carregando dados de clientes...")
+    print("\n Carregando dados de clientes...")
     # Priorizar arquivo com ID_CLIENTE
     clientes_files = list(processed_dir.glob("BASE_CLIENTES_COM_ID_*.xlsx"))
     if not clientes_files:
@@ -184,11 +184,11 @@ def main():
         clientes_files = (list(processed_dir.glob("CLIENTES_UNICOS_*.xlsx")) + 
                          list(processed_dir.glob("CLIENTES_CONSOLIDADO_*.xlsx")))
     if not clientes_files:
-        print("❌ Arquivo de clientes não encontrado!")
+        print(" Arquivo de clientes no encontrado!")
         return
     
     df_clientes = pd.read_excel(clientes_files[-1])  # Mais recente
-    print(f"✅ {len(df_clientes)} clientes únicos carregados")
+    print(f" {len(df_clientes)} clientes nicos carregados")
     
     # Normalizar dados dos clientes para busca
     df_clientes['Nome_normalizado'] = df_clientes['nome_completo'].apply(normalizar_nome)
@@ -197,7 +197,7 @@ def main():
     df_clientes['Cliente_ID'] = df_clientes['ID_CLIENTE']
     
     # 2. Processar todos os arquivos de OS
-    print("\n🔍 Processando arquivos de OS...")
+    print("\n Processando arquivos de OS...")
     raw_dir = data_dir / "raw"
     all_files = list(raw_dir.glob("*.xlsm")) + list(raw_dir.glob("*.xlsx"))
     
@@ -209,30 +209,30 @@ def main():
         df_relacoes = processar_arquivo_os(file_path, df_clientes)
         if not df_relacoes.empty:
             todas_relacoes.append(df_relacoes)
-            print(f"    ✅ {len(df_relacoes)} OS processadas")
+            print(f"     {len(df_relacoes)} OS processadas")
         else:
-            print(f"    ⚠️  Nenhuma OS encontrada")
+            print(f"      Nenhuma OS encontrada")
     
-    # 3. Combinar todas as relações
+    # 3. Combinar todas as relaes
     if todas_relacoes:
         df_final = pd.concat(todas_relacoes, ignore_index=True)
     else:
-        print("❌ Nenhuma relação encontrada!")
+        print(" Nenhuma relao encontrada!")
         return
     
-    # 4. Estatísticas
+    # 4. Estatsticas
     total_os = len(df_final)
     identificadas = len(df_final[df_final['Cliente_ID'].notna()])
     nao_identificadas = total_os - identificadas
     
-    print(f"\n📊 ESTATÍSTICAS DE RELACIONAMENTO:")
+    print(f"\n ESTATSTICAS DE RELACIONAMENTO:")
     print("=" * 50)
-    print(f"📋 Total de OS processadas: {total_os:,}")
-    print(f"✅ OS identificadas: {identificadas:,} ({identificadas/total_os*100:.1f}%)")
-    print(f"❌ OS não identificadas: {nao_identificadas:,} ({nao_identificadas/total_os*100:.1f}%)")
+    print(f" Total de OS processadas: {total_os:,}")
+    print(f" OS identificadas: {identificadas:,} ({identificadas/total_os*100:.1f}%)")
+    print(f" OS no identificadas: {nao_identificadas:,} ({nao_identificadas/total_os*100:.1f}%)")
     
-    # 5. Análise por loja
-    print(f"\n🏪 RELACIONAMENTO POR LOJA:")
+    # 5. Anlise por loja
+    print(f"\n RELACIONAMENTO POR LOJA:")
     print("=" * 50)
     for loja in df_final['Loja'].unique():
         df_loja = df_final[df_final['Loja'] == loja]
@@ -240,8 +240,8 @@ def main():
         ident_loja = len(df_loja[df_loja['Cliente_ID'].notna()])
         print(f"{loja}: {ident_loja}/{total_loja} ({ident_loja/total_loja*100:.1f}%)")
     
-    # 6. Análise por sistema
-    print(f"\n⚙️ RELACIONAMENTO POR SISTEMA:")
+    # 6. Anlise por sistema
+    print(f"\n RELACIONAMENTO POR SISTEMA:")
     print("=" * 50)
     for sistema in df_final['Sistema'].unique():
         df_sist = df_final[df_final['Sistema'] == sistema]
@@ -257,14 +257,14 @@ def main():
         # Sheet principal com relacionamentos
         df_final.to_excel(writer, sheet_name='Relacionamentos_OS_Cliente', index=False)
         
-        # Sheet com estatísticas detalhadas
+        # Sheet com estatsticas detalhadas
         stats_data = []
         
         # Stats gerais
         stats_data.append(['GERAL', 'Total_OS', total_os])
         stats_data.append(['GERAL', 'OS_Identificadas', identificadas])
-        stats_data.append(['GERAL', 'OS_Não_Identificadas', nao_identificadas])
-        stats_data.append(['GERAL', 'Taxa_Identificação_%', round(identificadas/total_os*100, 1)])
+        stats_data.append(['GERAL', 'OS_No_Identificadas', nao_identificadas])
+        stats_data.append(['GERAL', 'Taxa_Identificao_%', round(identificadas/total_os*100, 1)])
         
         # Stats por loja
         for loja in df_final['Loja'].unique():
@@ -273,7 +273,7 @@ def main():
             ident_loja = len(df_loja[df_loja['Cliente_ID'].notna()])
             stats_data.append([f'LOJA_{loja}', 'Total_OS', total_loja])
             stats_data.append([f'LOJA_{loja}', 'OS_Identificadas', ident_loja])
-            stats_data.append([f'LOJA_{loja}', 'Taxa_Identificação_%', round(ident_loja/total_loja*100, 1)])
+            stats_data.append([f'LOJA_{loja}', 'Taxa_Identificao_%', round(ident_loja/total_loja*100, 1)])
         
         # Stats por sistema
         for sistema in df_final['Sistema'].unique():
@@ -282,25 +282,25 @@ def main():
             ident_sist = len(df_sist[df_sist['Cliente_ID'].notna()])
             stats_data.append([f'SISTEMA_{sistema}', 'Total_OS', total_sist])
             stats_data.append([f'SISTEMA_{sistema}', 'OS_Identificadas', ident_sist])
-            stats_data.append([f'SISTEMA_{sistema}', 'Taxa_Identificação_%', round(ident_sist/total_sist*100, 1)])
+            stats_data.append([f'SISTEMA_{sistema}', 'Taxa_Identificao_%', round(ident_sist/total_sist*100, 1)])
         
-        df_stats = pd.DataFrame(stats_data, columns=['Categoria', 'Métrica', 'Valor'])
+        df_stats = pd.DataFrame(stats_data, columns=['Categoria', 'Mtrica', 'Valor'])
         df_stats.to_excel(writer, sheet_name='Estatisticas_Relacionamento', index=False)
         
-        # Sheet com OS não identificadas para análise
+        # Sheet com OS no identificadas para anlise
         df_nao_identificadas = df_final[df_final['Cliente_ID'].isna()]
         if not df_nao_identificadas.empty:
-            df_nao_identificadas.to_excel(writer, sheet_name='OS_Não_Identificadas', index=False)
+            df_nao_identificadas.to_excel(writer, sheet_name='OS_No_Identificadas', index=False)
     
-    print(f"\n📁 ARQUIVO GERADO:")
+    print(f"\n ARQUIVO GERADO:")
     print("=" * 50)
-    print(f"✅ {output_file}")
-    print(f"📊 Sheets: Relacionamentos_OS_Cliente, Estatisticas_Relacionamento, OS_Não_Identificadas")
+    print(f" {output_file}")
+    print(f" Sheets: Relacionamentos_OS_Cliente, Estatisticas_Relacionamento, OS_No_Identificadas")
     
-    print(f"\n🔗 RELACIONAMENTO CONCLUÍDO!")
+    print(f"\n RELACIONAMENTO CONCLUDO!")
     print("=" * 50)
-    print(f"🎯 {identificadas:,} OS conectadas com clientes")
-    print(f"📋 Base pronta para sistema final integrado")
+    print(f" {identificadas:,} OS conectadas com clientes")
+    print(f" Base pronta para sistema final integrado")
 
 if __name__ == "__main__":
     main()

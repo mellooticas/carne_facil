@@ -1,179 +1,372 @@
-# 👁️ Sistema de Gestão de Óticas - Carne Fácil
+# 👁️ Sistema de Gestão de Óticas - Carne Fácil# 👁️ Sistema de Gestão de Óticas - Carne Fácil
 
-![Python](https://img.shields.io/badge/Python-3.11+-blue.svg)
-![FastAPI](https://img.shields.io/badge/FastAPI-0.104+-green.svg)
-![Status](https://img.shields.io/badge/Status-Operacional-brightgreen.svg)
-![License](https://img.shields.io/badge/License-Private-red.svg)
 
-## 🎯 Visão Geral
 
-Sistema web avançado para gestão unificada de óticas com processamento inteligente de planilhas Excel, normalização de dados, sistema de relacionamento Cliente-OS e controle completo de duplicações.
+![Python](https://img.shields.io/badge/Python-3.11+-blue.svg)![Python](https://img.shields.io/badge/Python-3.11+-blue.svg)
 
-### ✨ Características Principais
+![FastAPI](https://img.shields.io/badge/FastAPI-0.104+-green.svg)![FastAPI](https://img.shields.io/badge/FastAPI-0.104+-green.svg)
 
-- 🌐 **Interface Web Moderna** - FastAPI + Jinja2
-- 📊 **Dashboard Executivo** - Métricas em tempo real
-- 🔗 **Sistema de Relacionamento** - Cliente-OS inteligente
-- 👁️ **Dioptrías Completas** - 25+ campos de prescrição
-- 💰 **Gestão de Vendas** - Produtos, pagamentos e análises
-- 🏪 **Multi-loja** - MAUA, SAO_MATEUS, RIO_PEQUENO
-- 🤖 **Deduplicação Inteligente** - FuzzyWuzzy + Levenshtein
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15+-blue.svg)![Status](https://img.shields.io/badge/Status-Operacional-brightgreen.svg)
 
-## 📊 Resultados Alcançados
+![Status](https://img.shields.io/badge/Status-Enterprise--Ready-brightgreen.svg)![License](https://img.shields.io/badge/License-Private-red.svg)
 
-### 🎯 Dados Processados
-- **👥 3,262** clientes únicos identificados
-- **📋 14,337** ordens de serviço processadas  
-- **🔗 5,624** relacionamentos OS-Cliente estabelecidos
+
+
+## 🎯 Visão Geral## 🎯 Visão Geral
+
+
+
+Sistema **enterprise** para gestão unificada de 6 óticas com processamento de planilhas Excel, banco de dados PostgreSQL profissional e interface web FastAPI.Sistema web avançado para gestão unificada de óticas com processamento inteligente de planilhas Excel, normalização de dados, sistema de relacionamento Cliente-OS e controle completo de duplicações.
+
+
+
+## 🏗️ Arquitetura### ✨ Características Principais
+
+
+
+```- 🌐 **Interface Web Moderna** - FastAPI + Jinja2
+
+carne_facil/- 📊 **Dashboard Executivo** - Métricas em tempo real
+
+├── 📂 app/                 # 🌐 Aplicação Web (FastAPI)- 🔗 **Sistema de Relacionamento** - Cliente-OS inteligente
+
+├── 📂 database/            # 🗄️ Scripts SQL Enterprise- 👁️ **Dioptrías Completas** - 25+ campos de prescrição
+
+├── 📂 etl/                 # 📥 Importação de Dados (5 scripts)- 💰 **Gestão de Vendas** - Produtos, pagamentos e análises
+
+├── 📂 scripts/             # 🛠️ Utilitários (58 scripts organizados)- 🏪 **Multi-loja** - MAUA, SAO_MATEUS, RIO_PEQUENO
+
+│   ├── analise/           #    📊 Análises (26)- 🤖 **Deduplicação Inteligente** - FuzzyWuzzy + Levenshtein
+
+│   ├── relatorios/        #    📈 Relatórios (8)
+
+│   ├── processamento/     #    ⚙️ Processadores (17)## 📊 Resultados Alcançados
+
+│   ├── limpeza/           #    🧹 Manutenção (5)
+
+│   └── deprecated/        #    📦 Legado (2)### 🎯 Dados Processados
+
+├── 📂 data/                # 📁 Dados Excel- **👥 3,262** clientes únicos identificados
+
+└── 📂 docs/                # 📚 Documentação- **📋 14,337** ordens de serviço processadas  
+
+```- **🔗 5,624** relacionamentos OS-Cliente estabelecidos
+
 - **👁️ 12,309** registros de dioptrías extraídos
-- **💰 R$ 70.2M** em vendas analisadas
+
+## ✨ Características Enterprise- **💰 R$ 70.2M** em vendas analisadas
+
 - **🏷️ 373** produtos únicos catalogados
 
+### 🗄️ Banco de Dados PostgreSQL
+
+- ✅ **5 schemas** organizados (core, vendas, optica, marketing, auditoria)### 🆕 Sistema Universal de Vendas (NOVO!)
+
+- ✅ **UUIDs** como chaves primárias- **🚀 Sistema Completo Implementado** - Processamento individual e em lote
+
+- ✅ **Soft delete** (nunca perde dados)- **📊 264 vendas** processadas (MAUA: 60, SUZANO: 204)
+
+- ✅ **Auditoria automática** (created_at, updated_at, version)- **💰 R$ 144.510,92** em faturamento consolidado
+
+- ✅ **Busca fuzzy** com pg_trgm- **📅 Suporte 2024/2025** - Estrutura multi-anos
+
+- ✅ **Normalização automática** de textos- **🔧 Formatação Brasileira** - Valores monetários corretos
+
+- ✅ **Validação de CPF** via triggers- **📈 Relatórios Executivos** - Dashboards e análises completas
+
+- ✅ **25+ índices otimizados**
+
 ### 📈 Performance do Sistema
-- **✅ 33.6%** taxa de identificação Cliente-OS
-- **✅ 96.7%** OS com dados de vendas
-- **✅ 83.0%** OS com produtos registrados
-- **✅ 100%** automação do processamento
 
-## 🚀 Instalação e Execução
+### 🌐 Web App (FastAPI)- **✅ 33.6%** taxa de identificação Cliente-OS
 
-### Pré-requisitos
-- Python 3.11+
-- pip (gerenciador de pacotes Python)
+- 🚀 Servidor rápido e assíncrono- **✅ 96.7%** OS com dados de vendas
 
-### 1. Clone o Repositório
+- 📊 Dashboard com métricas- **✅ 83.0%** OS com produtos registrados
+
+- 📤 Upload de planilhas Excel- **✅ 100%** automação do processamento
+
+- 🔍 Busca inteligente de clientes
+
+- 📈 Relatórios executivos## 🚀 Instalação e Execução
+
+
+
+### 📥 ETL Robusto### Pré-requisitos
+
+- 📊 **20.175 registros** processados- Python 3.11+
+
+- 💰 **R$ 7.752.688,50** em valores- pip (gerenciador de pacotes Python)
+
+- 🏪 **6 lojas** (5 ativas + 1 fechada)
+
+- 🔄 Importação automática### 1. Clone o Repositório
+
 ```bash
-git clone https://github.com/mellooticas/carne_facil.git
+
+## 📊 Dados Atuaisgit clone https://github.com/mellooticas/carne_facil.git
+
 cd carne_facil
-```
 
-### 2. Crie o Ambiente Virtual
-```bash
-python -m venv .venv
-```
+| Fonte | Registros | Valor |```
 
-### 3. Ative o Ambiente Virtual
+|-------|-----------|-------|
+
+| **Vendas (VEND)** | 7.547 | R$ 6.032.727,49 |### 2. Crie o Ambiente Virtual
+
+| **Recebimentos** | 3.108 | R$ 379.671,97 |```bash
+
+| **Entregas OS** | 5.974 | - |python -m venv .venv
+
+| **Entregas Carnê** | 678 | R$ 411.087,49 |```
+
+| **Restantes** | 2.868 | R$ 929.201,55 |
+
+| **TOTAL** | **20.175** | **R$ 7.752.688,50** |### 3. Ative o Ambiente Virtual
+
 **Windows:**
-```bash
+
+## 🚀 Quick Start```bash
+
 .venv\Scripts\activate
-```
 
-**Linux/Mac:**
-```bash
-source .venv/bin/activate
-```
+### 1. Clonar e Instalar```
 
-### 4. Instale as Dependências
 ```bash
+
+git clone https://github.com/mellooticas/carne_facil.git**Linux/Mac:**
+
+cd carne_facil```bash
+
+python -m venv .venvsource .venv/bin/activate
+
+source .venv/Scripts/activate  # Windows```
+
 pip install -r requirements.txt
-```
 
-### 5. Execute o Sistema Principal
+```### 4. Instale as Dependências
+
 ```bash
-uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
-```
 
-### 6. Execute o Dashboard (opcional)
+### 2. Criar Banco de Dadospip install -r requirements.txt
+
+```bash```
+
+# Criar database PostgreSQL
+
+createdb -U postgres oticas_db### 5. Execute o Sistema Principal
+
 ```bash
-python dashboard_simples.py
-```
 
-## 🌐 Acesso ao Sistema
+# Executar scripts SQL (em ordem)uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 
-- **Sistema Principal:** http://localhost:8000
+psql -U postgres -d oticas_db -f database/01_inicial_config.sql```
+
+psql -U postgres -d oticas_db -f database/02_schema_core.sql
+
+```### 6. Execute o Dashboard (opcional)
+
+```bash
+
+### 3. Importar Dadospython dashboard_simples.py
+
+```bash```
+
+# Importar dados das planilhas Excel
+
+python etl/importador_caixas_completo.py## 🌐 Acesso ao Sistema
+
+python etl/padronizar_clientes_vixen.py
+
+```- **Sistema Principal:** http://localhost:8000
+
 - **Dashboard Executivo:** http://localhost:8002
-- **Upload de Arquivos:** http://localhost:8000/upload
 
-## 📁 Estrutura do Projeto
+### 4. Executar App Web- **Upload de Arquivos:** http://localhost:8000/upload
 
-```
-carne_facil/
-├── app/                    # Aplicação web FastAPI
-│   ├── main.py            # Servidor principal
-│   ├── models/            # Modelos de dados
-│   ├── services/          # Serviços de negócio
-│   └── templates/         # Templates HTML
-├── scripts/               # Scripts de processamento
-│   ├── analisar_estrutura_os.py
-│   ├── criar_sistema_id_cliente.py
-│   ├── extrair_dioptrias.py
-│   ├── extrair_vendas.py
-│   ├── criar_relacionamento_os_cliente.py
-│   └── sistema_final_integrado.py
-├── data/                  # Dados do sistema
-│   ├── raw/              # Dados brutos
-│   └── processed/        # Dados processados
-├── dashboard_simples.py   # Dashboard executivo
-└── requirements.txt       # Dependências
-```
-
-## 🔧 Scripts Disponíveis
-
-### 📊 Análise e Processamento
 ```bash
-# Analisar estrutura das OS
-python scripts/analisar_estrutura_os.py
 
-# Criar sistema de ID único para clientes
-python scripts/criar_sistema_id_cliente.py
+uvicorn app.main:app --reload## 📁 Estrutura do Projeto
 
-# Extrair dados de dioptrías
+# Acesse: http://localhost:8000
+
+``````
+
+carne_facil/
+
+## 📚 Documentação├── app/                    # Aplicação web FastAPI
+
+│   ├── main.py            # Servidor principal
+
+### Database│   ├── models/            # Modelos de dados
+
+- 📖 [README Completo](database/README.md) - Arquitetura completa│   ├── services/          # Serviços de negócio
+
+- 🗺️ [Diagrama ERD](database/ERD_DIAGRAMA.md) - Mermaid visual│   └── templates/         # Templates HTML
+
+- 📄 [Resumo Executivo](database/RESUMO_EXECUTIVO.md) - Visão geral├── scripts/               # Scripts de processamento
+
+│   ├── analisar_estrutura_os.py
+
+### Scripts│   ├── criar_sistema_id_cliente.py
+
+- 📥 [ETL](etl/README.md) - Importação de dados│   ├── extrair_dioptrias.py
+
+- 📊 [Análises](scripts/analise/README.md) - 26 scripts│   ├── extrair_vendas.py
+
+- 📈 [Relatórios](scripts/relatorios/README.md) - 8 geradores│   ├── criar_relacionamento_os_cliente.py
+
+- ⚙️ [Processamento](scripts/processamento/README.md) - 17 scripts│   └── sistema_final_integrado.py
+
+- 🧹 [Limpeza](scripts/limpeza/README.md) - 5 utilitários├── data/                  # Dados do sistema
+
+│   ├── raw/              # Dados brutos
+
+## 🎯 Uso Comum│   └── processed/        # Dados processados
+
+├── dashboard_simples.py   # Dashboard executivo
+
+### Importar novos dados└── requirements.txt       # Dependências
+
+```bash```
+
+python etl/importador_caixas_completo.py
+
+```## 🔧 Scripts Disponíveis
+
+
+
+### Gerar relatório executivo### 📊 Análise e Processamento
+
+```bash```bash
+
+python scripts/relatorios/relatorio_executivo_final.py# Analisar estrutura das OS
+
+```python scripts/analisar_estrutura_os.py
+
+
+
+### Analisar dados# Criar sistema de ID único para clientes
+
+```bashpython scripts/criar_sistema_id_cliente.py
+
+python scripts/analise/analisar_dados_reais.py
+
+```# Extrair dados de dioptrías
+
 python scripts/extrair_dioptrias.py
 
-# Extrair dados de vendas
-python scripts/extrair_vendas.py
+### Iniciar servidor web
 
-# Criar relacionamentos OS-Cliente
-python scripts/criar_relacionamento_os_cliente.py
+```bash# Extrair dados de vendas
 
-# Gerar sistema final integrado
-python scripts/sistema_final_integrado.py
+uvicorn app.main:app --reloadpython scripts/extrair_vendas.py
+
 ```
 
-## 🎯 Funcionalidades Implementadas
+# Criar relacionamentos OS-Cliente
 
-### ✅ Sistema Base
-- [x] Interface web operacional
+## 🏪 Lojas Gerenciadaspython scripts/criar_relacionamento_os_cliente.py
+
+
+
+| Loja | Código | Status | Cidade |# Gerar sistema final integrado
+
+|------|--------|--------|--------|python scripts/sistema_final_integrado.py
+
+| Mauá | MAUA | ✅ Ativa | Mauá |```
+
+| Suzano | SUZANO | ✅ Ativa | Suzano |
+
+| Suzano 2 | SUZANO2 | ✅ Ativa | Suzano |## 🎯 Funcionalidades Implementadas
+
+| Rio Pequeno | RIO_PEQUENO | ✅ Ativa | São Paulo |
+
+| Perus | PERUS | ✅ Ativa | São Paulo |### ✅ Sistema Base
+
+| São Mateus | SAO_MATEUS | ❌ Fechada | São Paulo |- [x] Interface web operacional
+
 - [x] Upload de arquivos Excel
-- [x] Processamento de múltiplos formatos
+
+## 🛠️ Stack Tecnológica- [x] Processamento de múltiplos formatos
+
 - [x] Sistema de logs detalhado
 
-### ✅ Processamento de Dados
-- [x] Normalização automática
-- [x] Deduplicação inteligente
-- [x] Mapeamento de 82 campos únicos
-- [x] Identificação de 3 lojas ativas
+- **Backend**: Python 3.11+, FastAPI
 
-### ✅ Sistema de Relacionamento
+- **Database**: PostgreSQL 15+### ✅ Processamento de Dados
+
+- **Data Processing**: Pandas, Openpyxl- [x] Normalização automática
+
+- **Fuzzy Search**: FuzzyWuzzy, Python-Levenshtein- [x] Deduplicação inteligente
+
+- **Frontend**: Jinja2, HTML/CSS- [x] Mapeamento de 82 campos únicos
+
+- **Analysis**: Jupyter Notebooks- [x] Identificação de 3 lojas ativas
+
+
+
+## 📈 Métricas do Projeto### ✅ Sistema de Relacionamento
+
 - [x] IDs únicos para clientes (CLI_000001)
-- [x] Fuzzy matching para nomes
-- [x] Busca por CPF com prioridade
-- [x] Taxa de identificação de 33.6%
 
-### ✅ Dioptrías Completas
-- [x] 25 campos de prescrição
-- [x] Olho direito (OD) e esquerdo (OE)
-- [x] ESF, CIL, EIXO, DNP, ALTURA
+- **Scripts Python**: 63 organizados- [x] Fuzzy matching para nomes
+
+- **Schemas SQL**: 5 (core, vendas, optica, marketing, auditoria)- [x] Busca por CPF com prioridade
+
+- **Tabelas**: 13 principais- [x] Taxa de identificação de 33.6%
+
+- **Funções**: 8 utilitárias
+
+- **Índices**: 25+ otimizados### ✅ Dioptrías Completas
+
+- **Triggers**: 5 automáticos- [x] 25 campos de prescrição
+
+- **Dados**: 20.175 registros- [x] Olho direito (OD) e esquerdo (OE)
+
+- **Valor Total**: R$ 7.75M- [x] ESF, CIL, EIXO, DNP, ALTURA
+
 - [x] ADIÇÃO para multifocais
 
+## 🤝 Contribuindo
+
 ### ✅ Gestão de Vendas
-- [x] 5 produtos por OS
+
+Este é um projeto privado para uso interno da rede de óticas.- [x] 5 produtos por OS
+
 - [x] Códigos Trello
-- [x] Formas de pagamento
+
+## 📞 Suporte- [x] Formas de pagamento
+
 - [x] Sinais e valores restantes
 
-### ✅ Dashboard Executivo
-- [x] Métricas em tempo real
-- [x] Análise por loja
+Para dúvidas sobre o sistema:
+
+- 📧 Email: suporte@sistema-oticas.com### ✅ Dashboard Executivo
+
+- 📚 Docs: Ver pasta `/docs/`- [x] Métricas em tempo real
+
+- 🗺️ ERD: `/database/ERD_DIAGRAMA.md`- [x] Análise por loja
+
 - [x] Interface responsiva
-- [x] Auto-refresh
 
-## 📋 Dados Suportados
+## 📄 Licença- [x] Auto-refresh
 
-### 🏪 Lojas Operacionais
+
+
+Private - Uso interno apenas## 📋 Dados Suportados
+
+
+
+---### 🏪 Lojas Operacionais
+
 - **MAUA** - 5,252 registros
-- **SAO_MATEUS** - Múltiplos arquivos
-- **RIO_PEQUENO** - 552 registros
+
+**Versão**: 2.0.0 (Enterprise)  - **SAO_MATEUS** - Múltiplos arquivos
+
+**Última atualização**: 10/10/2025  - **RIO_PEQUENO** - 552 registros
+
+**Status**: ✅ Produção
 
 ### ⚙️ Sistemas Integrados
 - **LANCASTER** - Sistema principal

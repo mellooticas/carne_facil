@@ -5,11 +5,20 @@ Lê os arquivos parquet e gera blocos SQL executáveis no Supabase SQL Editor
 import pandas as pd
 from pathlib import Path
 import json
+import unicodedata
 
 # Configurações
 BATCH_SIZE = 200  # Linhas por arquivo SQL (reduzido para limites do Supabase)
 OUTPUT_DIR = Path('povoamento/dados')
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+
+def remover_acentos(texto):
+    """Remove acentos de um texto"""
+    if not texto:
+        return texto
+    # Normaliza para NFD (decomposição canônica) e remove marcas diacríticas
+    nfkd = unicodedata.normalize('NFD', str(texto))
+    return ''.join([c for c in nfkd if not unicodedata.combining(c)])
 
 def escapar_sql(valor):
     """Escapa valores para SQL"""
@@ -74,7 +83,15 @@ def gerar_sql_clientes():
                 cpf_limpo = str(row['cpf']).strip()
                 cpf = escapar_sql(f"{cpf_limpo[:3]}.{cpf_limpo[3:6]}.{cpf_limpo[6:9]}-{cpf_limpo[9:]}")
             
-            email = escapar_sql(row.get('email'))
+            # Email: remover espaços em branco e acentos
+            email = 'NULL'
+            if row.get('email'):
+                email_str = str(row['email']).strip()
+                # Remover acentos do email
+                email_str = remover_acentos(email_str)
+                if email_str and '@' in email_str and len(email_str) <= 100:
+                    email = escapar_sql(email_str)
+            
             id_legado = escapar_sql(str(row['id_cliente']))
             origem = str(row.get('origem', 'VIXEN')).upper()
             created_by = escapar_sql(f"MIGRACAO_{origem}")

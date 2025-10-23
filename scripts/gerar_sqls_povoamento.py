@@ -20,6 +20,30 @@ def remover_acentos(texto):
     nfkd = unicodedata.normalize('NFD', str(texto))
     return ''.join([c for c in nfkd if not unicodedata.combining(c)])
 
+def limpar_email(email):
+    """Limpa e valida email removendo caracteres inválidos"""
+    if not email or pd.isna(email):
+        return None
+    
+    # Converter para string e remover espaços
+    email_str = str(email).strip()
+    
+    # Remover acentos
+    email_str = remover_acentos(email_str)
+    
+    # Remover caracteres inválidos (manter apenas: letras, números, @, ., _, -, +, %)
+    import re
+    email_str = re.sub(r'[^a-zA-Z0-9@._\-+%]', '', email_str)
+    
+    # Validar formato básico e tamanho
+    if email_str and '@' in email_str and len(email_str) <= 100:
+        # Verificar se tem pelo menos um . depois do @
+        partes = email_str.split('@')
+        if len(partes) == 2 and '.' in partes[1]:
+            return email_str
+    
+    return None
+
 def escapar_sql(valor):
     """Escapa valores para SQL"""
     if pd.isna(valor) or valor == '' or valor == 'nan':
@@ -83,14 +107,12 @@ def gerar_sql_clientes():
                 cpf_limpo = str(row['cpf']).strip()
                 cpf = escapar_sql(f"{cpf_limpo[:3]}.{cpf_limpo[3:6]}.{cpf_limpo[6:9]}-{cpf_limpo[9:]}")
             
-            # Email: remover espaços em branco e acentos
+            # Email: limpar e validar
             email = 'NULL'
             if row.get('email'):
-                email_str = str(row['email']).strip()
-                # Remover acentos do email
-                email_str = remover_acentos(email_str)
-                if email_str and '@' in email_str and len(email_str) <= 100:
-                    email = escapar_sql(email_str)
+                email_limpo = limpar_email(row['email'])
+                if email_limpo:
+                    email = escapar_sql(email_limpo)
             
             id_legado = escapar_sql(str(row['id_cliente']))
             origem = str(row.get('origem', 'VIXEN')).upper()

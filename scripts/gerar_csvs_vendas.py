@@ -64,7 +64,7 @@ def formatar_data_simples(valor):
         return None
 
 def criar_csv_vendas_vixen(df_vendas, clientes_lookup):
-    """Cria CSV de vendas Vixen com id_legado_cliente para lookup"""
+    """Cria CSV de vendas Vixen pronto para importação direta (SEM lookup)"""
     
     print(f"\n=== PROCESSANDO VENDAS VIXEN PARA CSV ===")
     print(f"Total de vendas: {len(df_vendas):,}")
@@ -86,11 +86,21 @@ def criar_csv_vendas_vixen(df_vendas, clientes_lookup):
     
     print(f"Vendas com cliente válido: {len(df_validas):,}")
     
-    # Preparar DataFrame para CSV
+    # Mapeamento de lojas (código -> subquery para UUID)
+    # NOTA: UUIDs serão resolvidos via COPY com subquery no SQL
+    lojas_map = {
+        '009': 'Perus',
+        '010': 'Rio Pequeno', 
+        '011': 'São Mateus',
+        '012': 'Suzano 2',
+        '042': 'Mauá',
+        '048': 'Suzano'
+    }
+    
+    # Preparar DataFrame para CSV com LOOKUP PLACEHOLDERS
+    # Vamos criar com os campos que podem ser importados diretamente
     vendas_csv = pd.DataFrame({
         'id_legado': df_validas['id_dav'].fillna(df_validas['nro_dav']).apply(limpar_string),
-        'id_legado_cliente': df_validas['id_cliente'].astype(str),
-        'id_loja_codigo': df_validas['id_loja'].astype(str).str.strip(),
         'origem': 'VIXEN',
         'tipo': df_validas['origem'].apply(limpar_string),
         'status': df_validas['status'].apply(limpar_string),
@@ -113,11 +123,14 @@ def criar_csv_vendas_vixen(df_vendas, clientes_lookup):
         'meios_contato': df_validas['meios_contato'].apply(limpar_string),
         'mes_referencia': df_validas['mes_ref'].apply(limpar_string),
         'arquivo_origem': df_validas['arquivo'].apply(limpar_string),
+        # Campos auxiliares para lookup (serão usados no SQL)
+        '_id_legado_cliente': df_validas['id_cliente'].astype(str),
+        '_id_loja_codigo': df_validas['id_loja'].astype(str).str.strip(),
     })
     
     # Salvar CSV
     arquivo_saida = OUTPUT_DIR / "vendas_vixen.csv"
-    vendas_csv.to_csv(arquivo_saida, index=False, encoding='utf-8')
+    vendas_csv.to_csv(arquivo_saida, index=False, encoding='utf-8', na_rep='')
     
     print(f"\n✅ CSV criado: {arquivo_saida}")
     print(f"   Total de registros: {len(vendas_csv):,}")
@@ -126,7 +139,7 @@ def criar_csv_vendas_vixen(df_vendas, clientes_lookup):
     return len(vendas_csv)
 
 def criar_csv_vendas_os(df_os_map, clientes_lookup):
-    """Cria CSV de vendas OS com id_legado_cliente para lookup"""
+    """Cria CSV de vendas OS pronto para importação direta"""
     
     print(f"\n=== PROCESSANDO VENDAS OS PARA CSV ===")
     print(f"Total de vendas: {len(df_os_map):,}")
@@ -146,18 +159,19 @@ def criar_csv_vendas_os(df_os_map, clientes_lookup):
     # Preparar DataFrame para CSV
     vendas_csv = pd.DataFrame({
         'id_legado': df_validas['nro_dav'].astype(str).str.strip(),
-        'id_legado_cliente': df_validas['id_cliente'].astype(str),
-        'id_loja_codigo': df_validas['id_loja'].astype(str).str.strip(),
         'origem': 'OS',
         'tipo': 'ORDEM DE SERVIÇO',
         'status': 'FINALIZADO',
         'valor_liquido': 0.00,
         'data_venda': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+        # Campos auxiliares para lookup
+        '_id_legado_cliente': df_validas['id_cliente'].astype(str),
+        '_id_loja_codigo': df_validas['id_loja'].astype(str).str.strip(),
     })
     
     # Salvar CSV
     arquivo_saida = OUTPUT_DIR / "vendas_os.csv"
-    vendas_csv.to_csv(arquivo_saida, index=False, encoding='utf-8')
+    vendas_csv.to_csv(arquivo_saida, index=False, encoding='utf-8', na_rep='')
     
     print(f"\n✅ CSV criado: {arquivo_saida}")
     print(f"   Total de registros: {len(vendas_csv):,}")
@@ -202,8 +216,6 @@ def criar_csv_itens_venda(df_itens, df_vendas_vixen):
             valor_unitario = 0
         
         itens_data.append({
-            'id_legado_venda': id_legado_venda,
-            'id_loja_codigo': id_loja,  # Adicionar para lookup
             'item_numero': int(row.get('item', 1)),
             'id_produto': limpar_string(row.get('produto')),
             'descricao_produto': limpar_string(row.get('produto')) or 'PRODUTO',
@@ -215,6 +227,9 @@ def criar_csv_itens_venda(df_itens, df_vendas_vixen):
             'valor_total': float(row.get('vl_total', 0)),
             'mes_referencia': limpar_string(row.get('mes_ref')),
             'arquivo_origem': limpar_string(row.get('arquivo')),
+            # Campos auxiliares para lookup
+            '_id_legado_venda': id_legado_venda,
+            '_id_loja_codigo': id_loja,
         })
     
     # Criar DataFrame
@@ -222,7 +237,7 @@ def criar_csv_itens_venda(df_itens, df_vendas_vixen):
     
     # Salvar CSV
     arquivo_saida = OUTPUT_DIR / "itens_venda.csv"
-    itens_csv.to_csv(arquivo_saida, index=False, encoding='utf-8')
+    itens_csv.to_csv(arquivo_saida, index=False, encoding='utf-8', na_rep='')
     
     print(f"\n✅ CSV criado: {arquivo_saida}")
     print(f"   Total de registros: {len(itens_csv):,}")
